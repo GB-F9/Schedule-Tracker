@@ -893,12 +893,10 @@ function renderReports(){
   var h='<div class="rpt-month"><button onclick="rptPm()">&#8249;</button><span class="mlbl">'+MO[md.m]+" "+md.y+'</span><button onclick="rptNm()">&#8250;</button></div>';
 
   /* 1. TIME RECORD SUMMARY */
-  var totalHrs=0,daysWorked=0,daysOff=0,daysVL=0,daysSL=0;
+  var totalShifts=0,daysWorked=0,daysOff=0,daysVL=0,daysSL=0;
   for(var i=0;i<md.days.length;i++){
     var dy=md.days[i];
-    var dh=0;
-    for(var j=0;j<dy.logs.length;j++){if(dy.logs[j].lo)dh+=(new Date(dy.logs[j].lo)-new Date(dy.logs[j].lt))/3600000;}
-    totalHrs+=dh;
+    totalShifts+=dy.dd.shifts.length;
     if(dy.logs.length>0)daysWorked++;
     if(dy.dd.tags.indexOf("OFF")>=0)daysOff++;
     if(dy.dd.tags.indexOf("LV")>=0)daysVL++;
@@ -907,9 +905,9 @@ function renderReports(){
 
   h+='<div class="rpt-section">';
   h+='<div class="rpt-title">Daily time record</div>';
-  h+='<div class="rpt-desc">Shift schedules, login/logout, and hours for '+MO[md.m]+'</div>';
+  h+='<div class="rpt-desc">Shift schedules and login/logout for '+MO[md.m]+'</div>';
   h+='<div class="rpt-stat">';
-  h+='<div class="rpt-stat-item"><div class="rpt-stat-label">Hours</div><div class="rpt-stat-val">'+totalHrs.toFixed(1)+'</div></div>';
+  h+='<div class="rpt-stat-item"><div class="rpt-stat-label">Shifts</div><div class="rpt-stat-val">'+totalShifts+'</div></div>';
   h+='<div class="rpt-stat-item"><div class="rpt-stat-label">Worked</div><div class="rpt-stat-val">'+daysWorked+'</div></div>';
   h+='<div class="rpt-stat-item"><div class="rpt-stat-label">Off</div><div class="rpt-stat-val">'+daysOff+'</div></div>';
   h+='<div class="rpt-stat-item"><div class="rpt-stat-label">VL</div><div class="rpt-stat-val">'+daysVL+'</div></div>';
@@ -993,32 +991,34 @@ function xlsxReady(){
 
 function buildTimeRecordSheet(md){
   var rows=[];
+  var totalShifts=0;
   for(var i=0;i<md.days.length;i++){
     var dy=md.days[i];
     var dn=DAYS[dy.dt.getDay()];
     var parts=[];for(var j=0;j<dy.dd.all.length;j++){var it=gi(dy.dd.all[j]);if(it)parts.push(it.short);}
     var schStr=parts.join(", ");
+    var shiftCount=dy.dd.shifts.length;
+    totalShifts+=shiftCount;
     var tp=[];for(var j=0;j<dy.dd.tags.length;j++){var it=gi(dy.dd.tags[j]);if(it)tp.push(it.short);}
     var stStr=tp.join(", ");
     var swap=S.swaps[dy.ds];var swStr="";
     if(swap){var swSh=gi(swap.shift);swStr="Swap with: "+swap.nurse;if(swap.date)swStr+=", New: "+swap.date;if(swSh)swStr+=" ("+swSh.short+")";if(swap.notes)swStr+=", "+swap.notes;}
     if(dy.logs.length===0){
-      rows.push({Date:dy.ds,Day:dn,Schedule:schStr,Login:"",Logout:"",Hours:"",Status:stStr,"Swap Details":swStr});
+      rows.push({Date:dy.ds,Day:dn,Schedule:schStr,Login:"",Logout:"",Status:stStr,"Swap Details":swStr});
     }else{
       for(var li=0;li<dy.logs.length;li++){
         var l=dy.logs[li],iT=new Date(l.lt),oT=l.lo?new Date(l.lo):null;
-        var hrs=oT?((oT-iT)/3600000).toFixed(2):"";
         rows.push({Date:li===0?dy.ds:"",Day:li===0?dn:"",Schedule:li===0?schStr:"",
           Login:iT.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit",hour12:true}),
           Logout:oT?oT.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit",hour12:true}):"(active)",
-          Hours:hrs,Status:li===0?stStr:"","Swap Details":li===0?swStr:""});
+          Status:li===0?stStr:"","Swap Details":li===0?swStr:""});
       }
     }
   }
-  var th=0;for(var i=0;i<rows.length;i++)th+=(parseFloat(rows[i].Hours)||0);
-  rows.push({Date:"",Day:"",Schedule:"",Login:"",Logout:"TOTAL HOURS",Hours:th.toFixed(2),Status:"","Swap Details":""});
+  rows.push({Date:"",Day:"",Schedule:"",Login:"",Logout:"",Status:"",  "Swap Details":""});
+  rows.push({Date:"TOTAL SHIFTS",Day:"",Schedule:totalShifts,Login:"",Logout:"",Status:"","Swap Details":""});
   var ws=XLSX.utils.json_to_sheet(rows);
-  ws["!cols"]=[{wch:12},{wch:6},{wch:24},{wch:12},{wch:12},{wch:10},{wch:14},{wch:40}];
+  ws["!cols"]=[{wch:12},{wch:6},{wch:24},{wch:12},{wch:12},{wch:14},{wch:40}];
   return ws;
 }
 
