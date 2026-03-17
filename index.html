@@ -44,9 +44,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue'
 .main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 16px 110px}
 
 .tbar{position:fixed;bottom:0;left:0;right:0;display:flex;background:var(--bg);border-top:0.5px solid var(--bdr);padding:6px 0 calc(6px + var(--sab));z-index:50}
-.tbtn{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;cursor:pointer;padding:6px 4px;font-size:10px;color:var(--tx3)}
+.tbtn{flex:1;display:flex;flex-direction:column;align-items:center;gap:1px;background:none;border:none;cursor:pointer;padding:6px 2px;font-size:9px;color:var(--tx3)}
 .tbtn.act{color:var(--teal)}
-.tbtn svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tbtn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .tbtn.act svg{stroke-width:2.2}
 
 .mnav{display:flex;align-items:center;justify-content:space-between;padding:16px 4px 12px}
@@ -171,24 +171,8 @@ textarea.finp{min-height:80px;resize:vertical}
 .empty{text-align:center;padding:40px 16px;color:var(--tx3);font-size:13px}
 .dom{text-align:center;padding:20px;color:var(--tx3);font-size:14px;margin:10px 0;border:1px dashed var(--bdr);border-radius:var(--r)}
 
-/* Report */
-.srow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0 20px}
-.sc{background:var(--bg2);border-radius:var(--r);padding:14px 16px}
-.scl{font-size:12px;color:var(--tx3);margin-bottom:4px}
-.scv{font-size:26px;font-weight:600;letter-spacing:-0.5px}
-.rd{padding:12px 0;border-bottom:0.5px solid var(--bdr)}
-.rdr{display:flex;align-items:center;gap:8px}
-.rdc{width:58px;flex-shrink:0}
-.rdn{font-size:15px;font-weight:600}
-.rdd{font-size:11px;color:var(--tx3)}
-.rbs{display:flex;gap:4px;flex-wrap:wrap;flex:1}
+/* Shared */
 .rb{padding:2px 9px;border-radius:12px;font-size:11px;font-weight:600}
-.rh{font-size:13px;font-weight:600;color:var(--tx2);margin-left:auto;white-space:nowrap}
-.rlogs{padding:6px 0 0 66px}
-.rll{font-size:12px;color:var(--tx2);padding:2px 0;font-variant-numeric:tabular-nums}
-.rswap{font-size:11px;color:var(--pink-tx);background:var(--pink-bg);padding:4px 10px;border-radius:6px;margin:4px 0 0 66px;display:inline-block}
-.xbtn{width:100%;padding:16px;background:var(--teal);color:#fff;border:none;border-radius:var(--r);font-size:15px;font-weight:600;cursor:pointer;margin:24px 0 16px}
-.xbtn:active{transform:scale(.98);opacity:.9}
 
 /* Patients tab */
 .add-pat-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;border:1.5px dashed var(--blue);border-radius:var(--r);background:none;color:var(--blue);font-size:14px;font-weight:500;cursor:pointer;margin:16px 0}
@@ -212,6 +196,56 @@ textarea.finp{min-height:80px;resize:vertical}
 .pat-today-btn{padding:10px 16px;border:1.5px solid var(--teal);border-radius:var(--r);background:none;color:var(--teal);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
 .pat-today-btn:active{background:var(--teal-bg)}
 .pat-card-num{width:26px;height:26px;border-radius:50%;background:var(--blue-bg);color:var(--blue-tx);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0}
+
+/* Checklist */
+.checklist{margin-bottom:16px}
+.chk-row{display:flex;align-items:flex-start;gap:12px;padding:12px;border:1.5px solid var(--bdr);border-radius:var(--r);margin-bottom:6px;cursor:pointer;transition:all .12s}
+.chk-row:active{transform:scale(.98)}
+.chk-row.chk-on{border-color:var(--teal);background:var(--teal-bg)}
+.chk-box{width:22px;height:22px;border-radius:6px;border:2px solid var(--bdr);display:flex;align-items:center;justify-content:center;font-size:13px;color:transparent;flex-shrink:0;transition:all .12s}
+.chk-row.chk-on .chk-box{border-color:var(--teal);background:var(--teal);color:#fff}
+.chk-label{font-size:13px;line-height:1.4;padding-top:1px}
+.chk-no-tag{display:inline-block;background:var(--red-bg);color:var(--red-tx);font-size:11px;padding:2px 8px;border-radius:10px;margin:1px 2px}
+
+/* Charge nurse tab */
+.ch-card{background:var(--bg);border:0.5px solid var(--bdr);border-radius:var(--rl);padding:16px;margin-bottom:16px}
+.ch-card-title{font-size:15px;font-weight:600;margin-bottom:16px}
+.ch-field{margin-bottom:14px}
+.ch-flbl{font-size:12px;font-weight:600;color:var(--tx2);margin-bottom:6px;display:block;text-transform:uppercase;letter-spacing:0.3px}
+.ch-inp{margin-bottom:0;font-size:15px}
+.ch-num-row{display:flex;gap:0;align-items:center}
+.ch-num{text-align:center;border-radius:0;border-left:none;border-right:none;flex:1;font-weight:600;font-size:18px;padding:12px 8px}
+.ch-minus,.ch-plus{width:48px;height:48px;border:1.5px solid var(--bdr);background:var(--bg2);color:var(--tx);font-size:22px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .12s;flex-shrink:0}
+.ch-minus{border-radius:var(--r) 0 0 var(--r)}
+.ch-plus{border-radius:0 var(--r) var(--r) 0}
+.ch-minus:active,.ch-plus:active{background:var(--bdr);transform:scale(.95)}
+.ch-clear{display:block;width:100%;padding:10px;text-align:center;font-size:13px;color:var(--red);background:none;border:1px dashed var(--bdr);border-radius:var(--r);cursor:pointer;margin-top:8px}
+.ch-clear:active{background:var(--red-bg)}
+textarea.ch-inp{min-height:70px;resize:vertical}
+
+/* Reports tab */
+.rpt-month{display:flex;align-items:center;justify-content:space-between;padding:16px 4px 16px}
+.rpt-month button{background:none;border:0.5px solid var(--bdr);border-radius:var(--r);width:36px;height:36px;cursor:pointer;font-size:18px;color:var(--tx);display:flex;align-items:center;justify-content:center}
+.rpt-month button:active{background:var(--bg2);transform:scale(.96)}
+.rpt-section{margin-bottom:24px}
+.rpt-title{font-size:15px;font-weight:600;margin-bottom:4px}
+.rpt-desc{font-size:12px;color:var(--tx3);margin-bottom:12px}
+.rpt-card{background:var(--bg);border:0.5px solid var(--bdr);border-radius:var(--rl);padding:16px;margin-bottom:10px}
+.rpt-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:0.5px solid var(--bdr);font-size:13px}
+.rpt-row:last-child{border-bottom:none}
+.rpt-row-label{flex:1;color:var(--tx2)}
+.rpt-row-val{font-weight:600;min-width:50px;text-align:right}
+.rpt-total{background:var(--teal-bg);color:var(--teal-tx);font-weight:600}
+.rpt-total .rpt-row-label{color:var(--teal-tx)}
+.xbtn{width:100%;padding:14px;background:var(--teal);color:#fff;border:none;border-radius:var(--r);font-size:14px;font-weight:600;cursor:pointer;margin-top:8px;margin-bottom:8px}
+.xbtn:active{transform:scale(.98);opacity:.9}
+.rpt-stat{display:flex;gap:8px;margin-bottom:12px}
+.rpt-stat-item{flex:1;background:var(--bg2);border-radius:var(--r);padding:12px}
+.rpt-stat-label{font-size:11px;color:var(--tx3);margin-bottom:2px}
+.rpt-stat-val{font-size:22px;font-weight:600}
+.rpt-check-row{display:flex;align-items:flex-start;gap:6px;padding:6px 0;font-size:13px}
+.rpt-check-num{min-width:36px;font-weight:600;text-align:right;color:var(--teal-tx)}
+.rpt-check-txt{flex:1;color:var(--tx2)}
 </style>
 </head>
 <body>
@@ -250,13 +284,13 @@ function dsh(iso){var h=new Date(iso).getHours();if(h>=5&&h<10)return"AM";if(h>=
 function srt(a){return a.slice().sort(function(x,y){return ORDER.indexOf(x)-ORDER.indexOf(y);});}
 
 var K="cnph-v8";
-var S={tab:"schedule",vy:new Date().getFullYear(),vm:new Date().getMonth(),sel:fd(new Date()),scheds:{},logs:{},cin:null,swaps:{},patients:{}};
+var S={tab:"schedule",vy:new Date().getFullYear(),vm:new Date().getMonth(),sel:fd(new Date()),scheds:{},logs:{},cin:null,swaps:{},patients:{},charge:{}};
 var modalDate="";
 var swapDraft={nurse:"",date:"",shift:"",notes:""};
 var logDraft={login:"",logout:"",shift:"",editIdx:-1};
 
-function save(){try{localStorage.setItem(K,JSON.stringify({s:S.scheds,l:S.logs,c:S.cin,sw:S.swaps,p:S.patients}));}catch(e){}}
-function load(){try{var r=localStorage.getItem(K);if(r){var d=JSON.parse(r);S.scheds=d.s||{};S.logs=d.l||{};S.cin=d.c||null;S.swaps=d.sw||{};S.patients=d.p||{};}}catch(e){}}
+function save(){try{localStorage.setItem(K,JSON.stringify({s:S.scheds,l:S.logs,c:S.cin,sw:S.swaps,p:S.patients,ch:S.charge}));}catch(e){}}
+function load(){try{var r=localStorage.getItem(K);if(r){var d=JSON.parse(r);S.scheds=d.s||{};S.logs=d.l||{};S.cin=d.c||null;S.swaps=d.sw||{};S.patients=d.p||{};S.charge=d.ch||{};}}catch(e){}}
 
 function gdd(date){
   var raw=S.scheds[date]||[];
@@ -535,16 +569,29 @@ function saveSwap(date){
 }
 
 /* PATIENTS */
-var patDraft={name:"",procedure:"",diagnosis:"",doctor:"",notes:"",editIdx:-1};
+var CHECKS=[
+  {id:"endorsement",label:"Attended endorsement"},
+  {id:"admitted",label:"Admitted patient within the shift"},
+  {id:"attended",label:"Attended and assisted patient with his/her needs and rendered immediate nursing intervention"},
+  {id:"medications",label:"Administered his/her medications as prescribed by the physician on duty"},
+  {id:"orders",label:"Carried out doctor's orders with proper documentation"},
+  {id:"documented",label:"Completely documented patient cares done during the shift"},
+  {id:"teachings",label:"Provided health teachings to patient and/or watcher"},
+  {id:"discharge",label:"Provided complete health instructions of discharged patients"}
+];
+function defaultChecks(){var o={};for(var i=0;i<CHECKS.length;i++)o[CHECKS[i].id]=true;return o;}
+
+var patDraft={name:"",procedure:"",diagnosis:"",doctor:"",mcod:"",notes:"",checks:null,editIdx:-1};
 var patViewDate=fd(new Date());
 
 function openPatientForm(date,idx){
   patViewDate=date;
   if(idx>=0){
     var p=S.patients[date][idx];
-    patDraft={name:p.name||"",procedure:p.procedure||"",diagnosis:p.diagnosis||"",doctor:p.doctor||"",notes:p.notes||"",editIdx:idx};
+    var ch=p.checks?JSON.parse(JSON.stringify(p.checks)):defaultChecks();
+    patDraft={name:p.name||"",procedure:p.procedure||"",diagnosis:p.diagnosis||"",doctor:p.doctor||"",mcod:p.mcod||"",notes:p.notes||"",checks:ch,editIdx:idx};
   }else{
-    patDraft={name:"",procedure:"",diagnosis:"",doctor:"",notes:"",editIdx:-1};
+    patDraft={name:"",procedure:"",diagnosis:"",doctor:"",mcod:"",notes:"",checks:defaultChecks(),editIdx:-1};
   }
   openM();renderPatientFormModal(date);
 }
@@ -568,6 +615,21 @@ function renderPatientFormModal(date){
   h+='<label class="flbl">Referring doctor</label>';
   h+='<input class="finp" type="text" id="pat-doc" placeholder="Dr. name" value="'+esc(patDraft.doctor)+'" oninput="patDraft.doctor=this.value">';
 
+  h+='<div class="msl">Nursing care checklist</div>';
+  h+='<div class="checklist">';
+  for(var i=0;i<CHECKS.length;i++){
+    var c=CHECKS[i];
+    var val=patDraft.checks[c.id]!==false;
+    h+='<div class="chk-row'+(val?" chk-on":"")+'" onclick="toggleCheck(\''+c.id+'\',\''+date+'\')">';
+    h+='<div class="chk-box">'+(val?"&#10003;":"")+'</div>';
+    h+='<div class="chk-label">'+c.label+'</div>';
+    h+='</div>';
+  }
+  h+='</div>';
+
+  h+='<label class="flbl">MCOD (Medical certificate of death)</label>';
+  h+='<input class="finp" type="text" id="pat-mcod" placeholder="Internal medicine doctor\'s name" value="'+esc(patDraft.mcod)+'" oninput="patDraft.mcod=this.value">';
+
   h+='<label class="flbl">Additional notes</label>';
   h+='<textarea class="finp" id="pat-notes" placeholder="Optional notes" oninput="patDraft.notes=this.value">'+esc(patDraft.notes)+'</textarea>';
 
@@ -578,14 +640,20 @@ function renderPatientFormModal(date){
   document.getElementById("mdl").innerHTML=h;
 }
 
+function toggleCheck(checkId,date){
+  patDraft.checks[checkId]=!patDraft.checks[checkId];
+  renderPatientFormModal(date);
+}
+
 function savePatient(date){
   var n=document.getElementById("pat-name").value;
   var pr=document.getElementById("pat-proc").value;
   var dg=document.getElementById("pat-diag").value;
   var dc=document.getElementById("pat-doc").value;
+  var mc=document.getElementById("pat-mcod").value;
   var nt=document.getElementById("pat-notes").value;
   if(!n.trim()){alert("Please enter the patient name.");return;}
-  var entry={name:n,procedure:pr,diagnosis:dg,doctor:dc,notes:nt,time:new Date().toISOString()};
+  var entry={name:n,procedure:pr,diagnosis:dg,doctor:dc,mcod:mc,notes:nt,checks:JSON.parse(JSON.stringify(patDraft.checks)),time:new Date().toISOString()};
   if(!S.patients[date])S.patients[date]=[];
   if(patDraft.editIdx>=0){
     entry.time=S.patients[date][patDraft.editIdx].time||entry.time;
@@ -612,60 +680,11 @@ function clockOut(){
 }
 function delLog(date,idx){if(!confirm("Delete this time log entry?"))return;var l=S.logs[date];if(!l)return;l.splice(idx,1);if(l.length===0)delete S.logs[date];save();render();}
 
-/* EXPORT */
-function exportXL(){
-  if(typeof XLSX==="undefined"){alert("Excel library is still loading.");return;}
-  var y=S.vy,m=S.vm,tot=dim(y,m),rows=[];
-  for(var d=1;d<=tot;d++){
-    var ds2=y+"-"+String(m+1).padStart(2,"0")+"-"+String(d).padStart(2,"0");
-    var dt=pd(ds2),dn=DAYS[dt.getDay()],dd=gdd(ds2);
-    var parts=[];for(var j=0;j<dd.all.length;j++){var it=gi(dd.all[j]);if(it)parts.push(it.short);}
-    var schStr=parts.join(", ");
-    var tp=[];for(var j=0;j<dd.tags.length;j++){var it=gi(dd.tags[j]);if(it)tp.push(it.short);}
-    var stStr=tp.join(", ");
-    var swap=S.swaps[ds2];var swStr="";
-    if(swap){var swSh=gi(swap.shift);swStr="Swap with: "+swap.nurse;if(swap.date)swStr+=", New: "+swap.date;if(swSh)swStr+=" ("+swSh.short+")";if(swap.notes)swStr+=", "+swap.notes;}
-    var logs=S.logs[ds2]||[];
-    if(logs.length===0){rows.push({Date:ds2,Day:dn,Schedule:schStr,Login:"",Logout:"",Hours:"",Status:stStr,"Swap Details":swStr});}
-    else{for(var li=0;li<logs.length;li++){
-      var l=logs[li],iT=new Date(l.lt),oT=l.lo?new Date(l.lo):null;
-      var hrs=oT?((oT-iT)/3600000).toFixed(2):"";
-      rows.push({Date:li===0?ds2:"",Day:li===0?dn:"",Schedule:li===0?schStr:"",
-        Login:iT.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit",hour12:true}),
-        Logout:oT?oT.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit",hour12:true}):"(active)",
-        Hours:hrs,Status:li===0?stStr:"","Swap Details":li===0?swStr:""});
-    }}
-  }
-  var th=0;for(var i=0;i<rows.length;i++)th+=(parseFloat(rows[i].Hours)||0);
-  rows.push({Date:"",Day:"",Schedule:"",Login:"",Logout:"TOTAL HOURS",Hours:th.toFixed(2),Status:"","Swap Details":""});
-  var ws=XLSX.utils.json_to_sheet(rows);
-  ws["!cols"]=[{wch:12},{wch:6},{wch:24},{wch:12},{wch:12},{wch:10},{wch:14},{wch:40}];
-  var wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,"Shifts "+MO[m]+" "+y);
-
-  var patRows=[];
-  for(var d=1;d<=tot;d++){
-    var ds2=y+"-"+String(m+1).padStart(2,"0")+"-"+String(d).padStart(2,"0");
-    var dt=pd(ds2);var dn=DAYS[dt.getDay()];
-    var pats=S.patients[ds2]||[];
-    for(var pi=0;pi<pats.length;pi++){
-      var p=pats[pi];
-      patRows.push({Date:ds2,Day:dn,"Patient Name":p.name,"Procedure Done":p.procedure,"Final Diagnosis":p.diagnosis,"Referring Doctor":p.doctor,"Additional Notes":p.notes});
-    }
-  }
-  if(patRows.length>0){
-    var ws2=XLSX.utils.json_to_sheet(patRows);
-    ws2["!cols"]=[{wch:12},{wch:6},{wch:24},{wch:28},{wch:28},{wch:22},{wch:30}];
-    XLSX.utils.book_append_sheet(wb,ws2,"Patients "+MO[m]+" "+y);
-  }
-
-  XLSX.writeFile(wb,"Shift_Report_"+MO[m]+"_"+y+".xlsx");
-}
-
 /* RENDERERS */
 function renderTabs(){
-  var ic={schedule:'<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',clock:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',patients:'<svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>',report:'<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>'};
-  var lb={schedule:"Schedule",clock:"Time clock",patients:"Patients",report:"Report"};
-  var ids=["schedule","clock","patients","report"],h="";
+  var ic={schedule:'<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',clock:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',patients:'<svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>',charge:'<svg viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><line x1="12" y1="11" x2="12" y2="17"/><line x1="9" y1="14" x2="15" y2="14"/></svg>',reports:'<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>'};
+  var lb={schedule:"Schedule",clock:"Clock",patients:"Patients",charge:"Charge",reports:"Reports"};
+  var ids=["schedule","clock","patients","charge","reports"],h="";
   for(var i=0;i<ids.length;i++){var id=ids[i];h+='<button class="tbtn'+(S.tab===id?" act":"")+'" onclick="stab(\''+id+'\')">'+ic[id]+"<span>"+lb[id]+"</span></button>";}
   document.getElementById("tabs").innerHTML=h;
 }
@@ -719,36 +738,6 @@ function renderClock(){
   return h;
 }
 
-function renderReport(){
-  var y=S.vy,m=S.vm,tot=dim(y,m);
-  var th=0,dw=0,doff=0,dlv=0,dsl=0,entries=[];
-  for(var d=1;d<=tot;d++){
-    var ds2=y+"-"+String(m+1).padStart(2,"0")+"-"+String(d).padStart(2,"0");
-    var dt=pd(ds2),dd=gdd(ds2),logs=S.logs[ds2]||[],dh=0;
-    for(var i=0;i<logs.length;i++){if(logs[i].lo)dh+=(new Date(logs[i].lo)-new Date(logs[i].lt))/3600000;}
-    if(logs.length>0)dw++;if(dd.tags.indexOf("OFF")>=0)doff++;if(dd.tags.indexOf("LV")>=0)dlv++;if(dd.tags.indexOf("SL")>=0)dsl++;
-    th+=dh;if(dd.all.length>0||logs.length>0)entries.push({ds:ds2,dt:dt,dd:dd,logs:logs,dh:dh});
-  }
-  var h='<div class="mnav"><button onclick="pm()">&#8249;</button><span class="mlbl">'+MO[m]+" "+y+'</span><button onclick="nm()">&#8250;</button></div>';
-  h+='<div class="srow"><div class="sc"><div class="scl">Total hours</div><div class="scv">'+th.toFixed(1)+'h</div></div><div class="sc"><div class="scl">Days worked</div><div class="scv">'+dw+'</div></div></div>';
-  h+='<div class="srow"><div class="sc"><div class="scl">Days off</div><div class="scv">'+doff+'</div></div><div class="sc"><div class="scl">Vacation leave</div><div class="scv">'+dlv+'</div></div></div>';
-  h+='<div class="srow"><div class="sc"><div class="scl">Sick leave</div><div class="scv">'+dsl+'</div></div><div class="sc"><div class="scl">&nbsp;</div><div class="scv">&nbsp;</div></div></div>';
-  if(entries.length===0){h+='<div class="empty">No data for this month yet.</div>';}
-  else{
-    for(var e=0;e<entries.length;e++){
-      var en=entries[e];
-      h+='<div class="rd"><div class="rdr"><div class="rdc"><div class="rdn">'+String(en.dt.getDate()).padStart(2,"0")+'</div><div class="rdd">'+DAYS[en.dt.getDay()]+'</div></div><div class="rbs">';
-      for(var b=0;b<en.dd.all.length;b++){var it=gi(en.dd.all[b]);if(it)h+='<span class="rb" style="background:'+it.bg+";color:"+it.tx+'">'+it.short+'</span>';}
-      h+='</div>';if(en.dh>0)h+='<span class="rh">'+en.dh.toFixed(1)+'h</span>';h+='</div>';
-      if(en.logs.length>0){h+='<div class="rlogs">';for(var li=0;li<en.logs.length;li++){var l=en.logs[li],s=gi(l.sh);h+='<div class="rll"><span style="color:'+(s?s.tx:"inherit")+'">'+(s?s.short:"--")+'</span>&nbsp;&nbsp;'+ft(l.lt)+" → "+(l.lo?ft(l.lo):"(active)")+'</div>';}h+='</div>';}
-      var swap=S.swaps[en.ds];
-      if(swap){var swSh=gi(swap.shift);h+='<div class="rswap">Swap with '+swap.nurse+(swap.date?" → "+swap.date:"")+(swSh?" ("+swSh.short+")":"")+'</div>';}
-      h+='</div>';
-    }
-  }
-  h+='<button class="xbtn" onclick="exportXL()">Export to Excel (.xlsx)</button>';return h;
-}
-
 function renderPatients(){
   var today=fd(new Date());
   var dobj=pd(patViewDate);
@@ -777,6 +766,12 @@ function renderPatients(){
       if(p.procedure)h+='<div class="pat-field"><span class="pat-label">Procedure</span><span class="pat-value">'+esc(p.procedure)+'</span></div>';
       if(p.diagnosis)h+='<div class="pat-field"><span class="pat-label">Diagnosis</span><span class="pat-value">'+esc(p.diagnosis)+'</span></div>';
       if(p.doctor)h+='<div class="pat-field"><span class="pat-label">Doctor</span><span class="pat-value">'+esc(p.doctor)+'</span></div>';
+      if(p.checks){var noCount=0;for(var ci=0;ci<CHECKS.length;ci++){if(p.checks[CHECKS[ci].id]===false)noCount++;}
+        if(noCount>0){h+='<div class="pat-field"><span class="pat-label">Checklist</span><span class="pat-value">';
+          for(var ci=0;ci<CHECKS.length;ci++){var ck=CHECKS[ci];if(p.checks[ck.id]===false)h+='<span class="chk-no-tag">'+ck.label+'</span> ';}
+          h+='</span></div>';}
+      }
+      if(p.mcod)h+='<div class="pat-field"><span class="pat-label">MCOD</span><span class="pat-value">'+esc(p.mcod)+'</span></div>';
       if(p.notes)h+='<div class="pat-field"><span class="pat-label">Notes</span><span class="pat-value">'+esc(p.notes)+'</span></div>';
       h+='</div>';
     }
@@ -790,12 +785,347 @@ function patPrev(){var d=pd(patViewDate);d.setDate(d.getDate()-1);patViewDate=fd
 function patNext(){var d=pd(patViewDate);d.setDate(d.getDate()+1);patViewDate=fd(d);render();}
 function patJump(dateStr){if(dateStr){patViewDate=dateStr;render();}}
 
+/* CHARGE NURSE */
+var CHARGE_FIELDS=[
+  {id:"admissions",label:"Total admission / trans-in",placeholder:"0"},
+  {id:"discharges",label:"Total discharges / trans-out",placeholder:"0"},
+  {id:"deaths",label:"Total deaths",placeholder:"0"},
+  {id:"mpox",label:"MPOX report",placeholder:"Enter MPOX details"},
+  {id:"responsible",label:"Total reportable case",placeholder:"0"}
+];
+var chargeViewDate=fd(new Date());
+
+function chargeNav(dir){
+  var d=pd(chargeViewDate);
+  d.setDate(d.getDate()+dir);
+  chargeViewDate=fd(d);render();
+}
+function chargeJump(v){if(v){chargeViewDate=v;render();}}
+
+function saveChargeField(field){
+  var el=document.getElementById("ch-"+field);
+  if(!el)return;
+  if(!S.charge[chargeViewDate])S.charge[chargeViewDate]={};
+  S.charge[chargeViewDate][field]=el.value;
+  save();
+}
+
+function clearChargeDay(){
+  if(!confirm("Clear all charge nurse data for this day?"))return;
+  delete S.charge[chargeViewDate];
+  save();render();
+}
+
+function renderCharge(){
+  var today=fd(new Date());
+  var dobj=pd(chargeViewDate);
+  var isToday=chargeViewDate===today;
+  var data=S.charge[chargeViewDate]||{};
+
+  var h='<div class="mnav"><button onclick="chargeNav(-1)">&#8249;</button><span class="mlbl">'+dobj.toLocaleDateString([],{weekday:"long",month:"short",day:"numeric",year:"numeric"})+'</span><button onclick="chargeNav(1)">&#8250;</button></div>';
+
+  h+='<div class="pat-datepick">';
+  h+='<input class="finp pat-dateinp" type="date" value="'+chargeViewDate+'" onchange="chargeJump(this.value)" style="margin-bottom:0;flex:1">';
+  if(!isToday)h+='<button class="pat-today-btn" onclick="chargeJump(\''+today+'\')">Today</button>';
+  h+='</div>';
+
+  h+='<div class="ch-card">';
+  h+='<div class="ch-card-title">Charge nurse daily log</div>';
+
+  for(var i=0;i<CHARGE_FIELDS.length;i++){
+    var f=CHARGE_FIELDS[i];
+    var val=data[f.id]||"";
+    var isNum=(f.id!=="mpox");
+
+    h+='<div class="ch-field">';
+    h+='<label class="ch-flbl">'+f.label+'</label>';
+    if(f.id==="mpox"){
+      h+='<textarea class="finp ch-inp" id="ch-'+f.id+'" placeholder="'+f.placeholder+'" onblur="saveChargeField(\''+f.id+'\')">'+esc(val)+'</textarea>';
+    }else{
+      h+='<div class="ch-num-row">';
+      h+='<button class="ch-minus" onclick="chargeStep(\''+f.id+'\',-1)">-</button>';
+      h+='<input class="finp ch-inp ch-num" id="ch-'+f.id+'" type="number" inputmode="numeric" pattern="[0-9]*" placeholder="'+f.placeholder+'" value="'+esc(val)+'" onblur="saveChargeField(\''+f.id+'\')">';
+      h+='<button class="ch-plus" onclick="chargeStep(\''+f.id+'\',1)">+</button>';
+      h+='</div>';
+    }
+    h+='</div>';
+  }
+
+  var hasData=false;
+  for(var k in data){if(data[k])hasData=true;}
+  if(hasData){
+    h+='<button class="ch-clear" onclick="clearChargeDay()">Clear this day</button>';
+  }
+  h+='</div>';
+
+  return h;
+}
+
+function chargeStep(field,dir){
+  var el=document.getElementById("ch-"+field);
+  if(!el)return;
+  var val=parseInt(el.value)||0;
+  val+=dir;
+  if(val<0)val=0;
+  el.value=val;
+  saveChargeField(field);
+}
+
+/* REPORTS */
+var rptYear=new Date().getFullYear();
+var rptMonth=new Date().getMonth();
+
+function rptPm(){rptMonth--;if(rptMonth<0){rptMonth=11;rptYear--;}render();}
+function rptNm(){rptMonth++;if(rptMonth>11){rptMonth=0;rptYear++;}render();}
+
+function getMonthData(){
+  var y=rptYear,m=rptMonth,tot=dim(y,m);
+  var days=[];
+  for(var d=1;d<=tot;d++){
+    var ds2=y+"-"+String(m+1).padStart(2,"0")+"-"+String(d).padStart(2,"0");
+    days.push({ds:ds2,dt:pd(ds2),dd:gdd(ds2),logs:S.logs[ds2]||[],pats:S.patients[ds2]||[],ch:S.charge[ds2]||{}});
+  }
+  return{y:y,m:m,tot:tot,days:days};
+}
+
+function renderReports(){
+  var md=getMonthData();
+  var h='<div class="rpt-month"><button onclick="rptPm()">&#8249;</button><span class="mlbl">'+MO[md.m]+" "+md.y+'</span><button onclick="rptNm()">&#8250;</button></div>';
+
+  /* 1. TIME RECORD SUMMARY */
+  var totalHrs=0,daysWorked=0,daysOff=0,daysVL=0,daysSL=0;
+  for(var i=0;i<md.days.length;i++){
+    var dy=md.days[i];
+    var dh=0;
+    for(var j=0;j<dy.logs.length;j++){if(dy.logs[j].lo)dh+=(new Date(dy.logs[j].lo)-new Date(dy.logs[j].lt))/3600000;}
+    totalHrs+=dh;
+    if(dy.logs.length>0)daysWorked++;
+    if(dy.dd.tags.indexOf("OFF")>=0)daysOff++;
+    if(dy.dd.tags.indexOf("LV")>=0)daysVL++;
+    if(dy.dd.tags.indexOf("SL")>=0)daysSL++;
+  }
+
+  h+='<div class="rpt-section">';
+  h+='<div class="rpt-title">Daily time record</div>';
+  h+='<div class="rpt-desc">Shift schedules, login/logout, and hours for '+MO[md.m]+'</div>';
+  h+='<div class="rpt-stat">';
+  h+='<div class="rpt-stat-item"><div class="rpt-stat-label">Hours</div><div class="rpt-stat-val">'+totalHrs.toFixed(1)+'</div></div>';
+  h+='<div class="rpt-stat-item"><div class="rpt-stat-label">Worked</div><div class="rpt-stat-val">'+daysWorked+'</div></div>';
+  h+='<div class="rpt-stat-item"><div class="rpt-stat-label">Off</div><div class="rpt-stat-val">'+daysOff+'</div></div>';
+  h+='<div class="rpt-stat-item"><div class="rpt-stat-label">VL</div><div class="rpt-stat-val">'+daysVL+'</div></div>';
+  h+='<div class="rpt-stat-item"><div class="rpt-stat-label">SL</div><div class="rpt-stat-val">'+daysSL+'</div></div>';
+  h+='</div>';
+  h+='<button class="xbtn" onclick="exportTimeRecord()">Export time record (.xlsx)</button>';
+  h+='</div>';
+
+  /* 2. ACCOMPLISHMENT REPORT */
+  var totalPats=0;
+  var checkTotals={};
+  for(var ci=0;ci<CHECKS.length;ci++)checkTotals[CHECKS[ci].id]=0;
+  for(var i=0;i<md.days.length;i++){
+    var pats=md.days[i].pats;
+    totalPats+=pats.length;
+    for(var pi=0;pi<pats.length;pi++){
+      var p=pats[pi];
+      for(var ci=0;ci<CHECKS.length;ci++){
+        var ck=CHECKS[ci];
+        if(!p.checks||p.checks[ck.id]!==false)checkTotals[ck.id]++;
+      }
+    }
+  }
+
+  h+='<div class="rpt-section">';
+  h+='<div class="rpt-title">Accomplishment report</div>';
+  h+='<div class="rpt-desc">Nursing tasks performed for '+MO[md.m]+' ('+totalPats+' total patients)</div>';
+  h+='<div class="rpt-card">';
+  h+='<div class="rpt-check-row"><div class="rpt-check-num">'+checkTotals["endorsement"]+'</div><div class="rpt-check-txt">Attended endorsements</div></div>';
+  h+='<div class="rpt-check-row"><div class="rpt-check-num">'+checkTotals["admitted"]+'</div><div class="rpt-check-txt">Admitted patients within the shift</div></div>';
+  h+='<div class="rpt-check-row"><div class="rpt-check-num">'+checkTotals["attended"]+'</div><div class="rpt-check-txt">Attended and assisted patients with their needs and rendered immediate nursing interventions</div></div>';
+  h+='<div class="rpt-check-row"><div class="rpt-check-num">'+checkTotals["medications"]+'</div><div class="rpt-check-txt">Administered medications as prescribed by the physician on duty</div></div>';
+  h+='<div class="rpt-check-row"><div class="rpt-check-num">'+checkTotals["orders"]+'</div><div class="rpt-check-txt">Carried out doctor\'s orders with proper documentation</div></div>';
+  h+='<div class="rpt-check-row"><div class="rpt-check-num">'+checkTotals["documented"]+'</div><div class="rpt-check-txt">Completely documented patient cares done during the shift</div></div>';
+  h+='<div class="rpt-check-row"><div class="rpt-check-num">'+checkTotals["teachings"]+'</div><div class="rpt-check-txt">Provided health teachings to patients and/or watchers</div></div>';
+  h+='<div class="rpt-check-row"><div class="rpt-check-num">'+checkTotals["discharge"]+'</div><div class="rpt-check-txt">Provided complete health instructions of discharged patients</div></div>';
+  h+='</div>';
+  h+='<button class="xbtn" onclick="exportAccomplishment()">Export accomplishment report (.xlsx)</button>';
+  h+='</div>';
+
+  /* 3. CHARGE NURSE SUMMARY */
+  var chTotals={admissions:0,discharges:0,deaths:0,responsible:0};
+  var chDaysWithData=0;
+  var mpoxEntries=[];
+  for(var i=0;i<md.days.length;i++){
+    var ch=md.days[i].ch;
+    var hasAny=false;
+    if(parseInt(ch.admissions)||0){chTotals.admissions+=parseInt(ch.admissions);hasAny=true;}
+    if(parseInt(ch.discharges)||0){chTotals.discharges+=parseInt(ch.discharges);hasAny=true;}
+    if(parseInt(ch.deaths)||0){chTotals.deaths+=parseInt(ch.deaths);hasAny=true;}
+    if(parseInt(ch.responsible)||0){chTotals.responsible+=parseInt(ch.responsible);hasAny=true;}
+    if(ch.mpox){mpoxEntries.push({date:md.days[i].ds,text:ch.mpox});hasAny=true;}
+    if(hasAny)chDaysWithData++;
+  }
+
+  h+='<div class="rpt-section">';
+  h+='<div class="rpt-title">Charge nurse summary</div>';
+  h+='<div class="rpt-desc">Daily census totals for '+MO[md.m]+' ('+chDaysWithData+' days with data)</div>';
+  h+='<div class="rpt-card">';
+  h+='<div class="rpt-row"><span class="rpt-row-label">Total admission / trans-in</span><span class="rpt-row-val">'+chTotals.admissions+'</span></div>';
+  h+='<div class="rpt-row"><span class="rpt-row-label">Total discharges / trans-out</span><span class="rpt-row-val">'+chTotals.discharges+'</span></div>';
+  h+='<div class="rpt-row"><span class="rpt-row-label">Total deaths</span><span class="rpt-row-val">'+chTotals.deaths+'</span></div>';
+  h+='<div class="rpt-row"><span class="rpt-row-label">Total reportable case</span><span class="rpt-row-val">'+chTotals.responsible+'</span></div>';
+  if(mpoxEntries.length>0){
+    h+='<div class="rpt-row"><span class="rpt-row-label">MPOX reports</span><span class="rpt-row-val">'+mpoxEntries.length+'</span></div>';
+  }
+  h+='</div>';
+  h+='<button class="xbtn" onclick="exportCharge()">Export charge nurse report (.xlsx)</button>';
+  h+='</div>';
+
+  h+='<button class="xbtn" style="background:var(--blue);margin-top:16px" onclick="exportAll()">Export all reports (.xlsx)</button>';
+
+  return h;
+}
+
+/* EXPORT FUNCTIONS */
+function xlsxReady(){
+  if(typeof XLSX==="undefined"){alert("Excel library is still loading. Please try again in a few seconds.");return false;}
+  return true;
+}
+
+function buildTimeRecordSheet(md){
+  var rows=[];
+  for(var i=0;i<md.days.length;i++){
+    var dy=md.days[i];
+    var dn=DAYS[dy.dt.getDay()];
+    var parts=[];for(var j=0;j<dy.dd.all.length;j++){var it=gi(dy.dd.all[j]);if(it)parts.push(it.short);}
+    var schStr=parts.join(", ");
+    var tp=[];for(var j=0;j<dy.dd.tags.length;j++){var it=gi(dy.dd.tags[j]);if(it)tp.push(it.short);}
+    var stStr=tp.join(", ");
+    var swap=S.swaps[dy.ds];var swStr="";
+    if(swap){var swSh=gi(swap.shift);swStr="Swap with: "+swap.nurse;if(swap.date)swStr+=", New: "+swap.date;if(swSh)swStr+=" ("+swSh.short+")";if(swap.notes)swStr+=", "+swap.notes;}
+    if(dy.logs.length===0){
+      rows.push({Date:dy.ds,Day:dn,Schedule:schStr,Login:"",Logout:"",Hours:"",Status:stStr,"Swap Details":swStr});
+    }else{
+      for(var li=0;li<dy.logs.length;li++){
+        var l=dy.logs[li],iT=new Date(l.lt),oT=l.lo?new Date(l.lo):null;
+        var hrs=oT?((oT-iT)/3600000).toFixed(2):"";
+        rows.push({Date:li===0?dy.ds:"",Day:li===0?dn:"",Schedule:li===0?schStr:"",
+          Login:iT.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit",hour12:true}),
+          Logout:oT?oT.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit",hour12:true}):"(active)",
+          Hours:hrs,Status:li===0?stStr:"","Swap Details":li===0?swStr:""});
+      }
+    }
+  }
+  var th=0;for(var i=0;i<rows.length;i++)th+=(parseFloat(rows[i].Hours)||0);
+  rows.push({Date:"",Day:"",Schedule:"",Login:"",Logout:"TOTAL HOURS",Hours:th.toFixed(2),Status:"","Swap Details":""});
+  var ws=XLSX.utils.json_to_sheet(rows);
+  ws["!cols"]=[{wch:12},{wch:6},{wch:24},{wch:12},{wch:12},{wch:10},{wch:14},{wch:40}];
+  return ws;
+}
+
+function buildAccomplishmentSheet(md){
+  var patRows=[];
+  for(var i=0;i<md.days.length;i++){
+    var dy=md.days[i];var dn=DAYS[dy.dt.getDay()];
+    for(var pi=0;pi<dy.pats.length;pi++){
+      var p=dy.pats[pi];
+      var row={Date:dy.ds,Day:dn,"Patient Name":p.name,"Procedure Done":p.procedure,"Final Diagnosis":p.diagnosis,"Referring Doctor":p.doctor};
+      for(var ci=0;ci<CHECKS.length;ci++){
+        var ck=CHECKS[ci];
+        row[ck.label]=(!p.checks||p.checks[ck.id]!==false)?"Yes":"No";
+      }
+      row["MCOD"]=p.mcod||"";
+      row["Additional Notes"]=p.notes||"";
+      patRows.push(row);
+    }
+  }
+  /* Summary rows */
+  if(patRows.length>0){
+    var totalPatCount=patRows.length;
+    patRows.push({Date:"",Day:"","Patient Name":"","Procedure Done":"","Final Diagnosis":"","Referring Doctor":""});
+    var sumRow={Date:"SUMMARY",Day:"","Patient Name":"Total patients: "+totalPatCount,"Procedure Done":"","Final Diagnosis":"","Referring Doctor":""};
+    for(var ci=0;ci<CHECKS.length;ci++){
+      var ck=CHECKS[ci];
+      var count=0;
+      for(var r=0;r<patRows.length-1;r++){if(patRows[r][ck.label]==="Yes")count++;}
+      sumRow[ck.label]=count;
+    }
+    sumRow["MCOD"]="";sumRow["Additional Notes"]="";
+    patRows.push(sumRow);
+  }
+  var ws=XLSX.utils.json_to_sheet(patRows);
+  var cols=[{wch:12},{wch:6},{wch:24},{wch:28},{wch:28},{wch:22}];
+  for(var ci=0;ci<CHECKS.length;ci++)cols.push({wch:18});
+  cols.push({wch:20});cols.push({wch:30});
+  ws["!cols"]=cols;
+  return ws;
+}
+
+function buildChargeSheet(md){
+  var rows=[];
+  for(var i=0;i<md.days.length;i++){
+    var dy=md.days[i];var dn=DAYS[dy.dt.getDay()];var ch=dy.ch;
+    var hasAny=(ch.admissions||ch.discharges||ch.deaths||ch.mpox||ch.responsible);
+    if(hasAny){
+      rows.push({Date:dy.ds,Day:dn,"Admissions/Trans-In":ch.admissions||0,"Discharges/Trans-Out":ch.discharges||0,"Deaths":ch.deaths||0,"MPOX Report":ch.mpox||"","Reportable Case":ch.responsible||0});
+    }
+  }
+  if(rows.length>0){
+    var totA=0,totD=0,totDe=0,totR=0;
+    for(var i=0;i<rows.length;i++){
+      totA+=parseInt(rows[i]["Admissions/Trans-In"])||0;
+      totD+=parseInt(rows[i]["Discharges/Trans-Out"])||0;
+      totDe+=parseInt(rows[i]["Deaths"])||0;
+      totR+=parseInt(rows[i]["Reportable Case"])||0;
+    }
+    rows.push({Date:"",Day:"","Admissions/Trans-In":"","Discharges/Trans-Out":"","Deaths":"","MPOX Report":"","Reportable Case":""});
+    rows.push({Date:"TOTAL",Day:"","Admissions/Trans-In":totA,"Discharges/Trans-Out":totD,"Deaths":totDe,"MPOX Report":"","Reportable Case":totR});
+  }
+  var ws=XLSX.utils.json_to_sheet(rows);
+  ws["!cols"]=[{wch:12},{wch:6},{wch:20},{wch:22},{wch:10},{wch:30},{wch:18}];
+  return ws;
+}
+
+function exportTimeRecord(){
+  if(!xlsxReady())return;
+  var md=getMonthData();
+  var wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,buildTimeRecordSheet(md),"Time Record");
+  XLSX.writeFile(wb,"Time_Record_"+MO[md.m]+"_"+md.y+".xlsx");
+}
+
+function exportAccomplishment(){
+  if(!xlsxReady())return;
+  var md=getMonthData();
+  var wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,buildAccomplishmentSheet(md),"Accomplishment");
+  XLSX.writeFile(wb,"Accomplishment_"+MO[md.m]+"_"+md.y+".xlsx");
+}
+
+function exportCharge(){
+  if(!xlsxReady())return;
+  var md=getMonthData();
+  var wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,buildChargeSheet(md),"Charge Nurse");
+  XLSX.writeFile(wb,"Charge_Nurse_"+MO[md.m]+"_"+md.y+".xlsx");
+}
+
+function exportAll(){
+  if(!xlsxReady())return;
+  var md=getMonthData();
+  var wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,buildTimeRecordSheet(md),"Time Record");
+  XLSX.utils.book_append_sheet(wb,buildAccomplishmentSheet(md),"Accomplishment");
+  XLSX.utils.book_append_sheet(wb,buildChargeSheet(md),"Charge Nurse");
+  XLSX.writeFile(wb,"Shift_Report_"+MO[md.m]+"_"+md.y+".xlsx");
+}
+
 function render(){
   renderTabs();var m=document.getElementById("main");
   if(S.tab==="schedule")m.innerHTML=renderSchedule();
   else if(S.tab==="clock")m.innerHTML=renderClock();
   else if(S.tab==="patients")m.innerHTML=renderPatients();
-  else m.innerHTML=renderReport();
+  else if(S.tab==="charge")m.innerHTML=renderCharge();
+  else if(S.tab==="reports")m.innerHTML=renderReports();
 }
 
 setInterval(function(){var e=document.getElementById("lc");if(e)e.textContent=new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:true});},1000);
