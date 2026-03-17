@@ -189,6 +189,29 @@ textarea.finp{min-height:80px;resize:vertical}
 .rswap{font-size:11px;color:var(--pink-tx);background:var(--pink-bg);padding:4px 10px;border-radius:6px;margin:4px 0 0 66px;display:inline-block}
 .xbtn{width:100%;padding:16px;background:var(--teal);color:#fff;border:none;border-radius:var(--r);font-size:15px;font-weight:600;cursor:pointer;margin:24px 0 16px}
 .xbtn:active{transform:scale(.98);opacity:.9}
+
+/* Patients tab */
+.add-pat-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;border:1.5px dashed var(--blue);border-radius:var(--r);background:none;color:var(--blue);font-size:14px;font-weight:500;cursor:pointer;margin:16px 0}
+.add-pat-btn:active{background:var(--blue-bg)}
+.add-pat-btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
+.pat-card{background:var(--bg);border:0.5px solid var(--bdr);border-radius:var(--rl);padding:16px;margin-bottom:10px}
+.pat-card-hdr{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.pat-card-name{font-size:15px;font-weight:600;flex:1}
+.pat-card-actions{display:flex;gap:4px}
+.pat-edit{background:none;border:none;color:var(--blue);font-size:12px;font-weight:500;cursor:pointer;padding:4px 8px;border-radius:6px}
+.pat-edit:active{background:var(--blue-bg)}
+.pat-del{background:none;border:none;color:var(--red);cursor:pointer;font-size:18px;padding:2px 6px;border-radius:6px}
+.pat-del:active{background:var(--red-bg)}
+.pat-field{display:flex;gap:8px;padding:6px 0;border-top:0.5px solid var(--bdr);font-size:13px}
+.pat-field:first-of-type{border-top:none}
+.pat-label{color:var(--tx3);width:80px;flex-shrink:0;font-weight:500}
+.pat-value{color:var(--tx);flex:1}
+.pat-summary{text-align:center;font-size:12px;color:var(--tx3);padding:12px 0;margin-top:8px}
+.pat-datepick{display:flex;gap:8px;align-items:center;margin-bottom:12px}
+.pat-dateinp{font-size:14px;padding:10px 12px}
+.pat-today-btn{padding:10px 16px;border:1.5px solid var(--teal);border-radius:var(--r);background:none;color:var(--teal);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+.pat-today-btn:active{background:var(--teal-bg)}
+.pat-card-num{width:26px;height:26px;border-radius:50%;background:var(--blue-bg);color:var(--blue-tx);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0}
 </style>
 </head>
 <body>
@@ -227,13 +250,13 @@ function dsh(iso){var h=new Date(iso).getHours();if(h>=5&&h<10)return"AM";if(h>=
 function srt(a){return a.slice().sort(function(x,y){return ORDER.indexOf(x)-ORDER.indexOf(y);});}
 
 var K="cnph-v8";
-var S={tab:"schedule",vy:new Date().getFullYear(),vm:new Date().getMonth(),sel:fd(new Date()),scheds:{},logs:{},cin:null,swaps:{}};
+var S={tab:"schedule",vy:new Date().getFullYear(),vm:new Date().getMonth(),sel:fd(new Date()),scheds:{},logs:{},cin:null,swaps:{},patients:{}};
 var modalDate="";
 var swapDraft={nurse:"",date:"",shift:"",notes:""};
 var logDraft={login:"",logout:"",shift:"",editIdx:-1};
 
-function save(){try{localStorage.setItem(K,JSON.stringify({s:S.scheds,l:S.logs,c:S.cin,sw:S.swaps}));}catch(e){}}
-function load(){try{var r=localStorage.getItem(K);if(r){var d=JSON.parse(r);S.scheds=d.s||{};S.logs=d.l||{};S.cin=d.c||null;S.swaps=d.sw||{};}}catch(e){}}
+function save(){try{localStorage.setItem(K,JSON.stringify({s:S.scheds,l:S.logs,c:S.cin,sw:S.swaps,p:S.patients}));}catch(e){}}
+function load(){try{var r=localStorage.getItem(K);if(r){var d=JSON.parse(r);S.scheds=d.s||{};S.logs=d.l||{};S.cin=d.c||null;S.swaps=d.sw||{};S.patients=d.p||{};}}catch(e){}}
 
 function gdd(date){
   var raw=S.scheds[date]||[];
@@ -511,6 +534,75 @@ function saveSwap(date){
   save();openMain(date);render();
 }
 
+/* PATIENTS */
+var patDraft={name:"",procedure:"",diagnosis:"",doctor:"",notes:"",editIdx:-1};
+var patViewDate=fd(new Date());
+
+function openPatientForm(date,idx){
+  patViewDate=date;
+  if(idx>=0){
+    var p=S.patients[date][idx];
+    patDraft={name:p.name||"",procedure:p.procedure||"",diagnosis:p.diagnosis||"",doctor:p.doctor||"",notes:p.notes||"",editIdx:idx};
+  }else{
+    patDraft={name:"",procedure:"",diagnosis:"",doctor:"",notes:"",editIdx:-1};
+  }
+  openM();renderPatientFormModal(date);
+}
+
+function renderPatientFormModal(date){
+  var dobj=pd(date);
+  var isEdit=patDraft.editIdx>=0;
+  var h='<div class="mh"></div>';
+  h+='<div class="mt">'+(isEdit?"Edit patient record":"New patient record")+'</div>';
+  h+='<div class="ms">'+dobj.toLocaleDateString([],{weekday:"long",month:"long",day:"numeric"})+'</div>';
+
+  h+='<label class="flbl">Patient name</label>';
+  h+='<input class="finp" type="text" id="pat-name" placeholder="Full name of patient" value="'+esc(patDraft.name)+'" oninput="patDraft.name=this.value">';
+
+  h+='<label class="flbl">Procedure done</label>';
+  h+='<input class="finp" type="text" id="pat-proc" placeholder="e.g. IV insertion, wound dressing" value="'+esc(patDraft.procedure)+'" oninput="patDraft.procedure=this.value">';
+
+  h+='<label class="flbl">Final diagnosis</label>';
+  h+='<input class="finp" type="text" id="pat-diag" placeholder="e.g. Acute gastroenteritis" value="'+esc(patDraft.diagnosis)+'" oninput="patDraft.diagnosis=this.value">';
+
+  h+='<label class="flbl">Referring doctor</label>';
+  h+='<input class="finp" type="text" id="pat-doc" placeholder="Dr. name" value="'+esc(patDraft.doctor)+'" oninput="patDraft.doctor=this.value">';
+
+  h+='<label class="flbl">Additional notes</label>';
+  h+='<textarea class="finp" id="pat-notes" placeholder="Optional notes" oninput="patDraft.notes=this.value">'+esc(patDraft.notes)+'</textarea>';
+
+  h+='<div class="mbtns">';
+  h+='<button class="mb-clr" onclick="closeM()">Cancel</button>';
+  h+='<button class="mb-done" onclick="savePatient(\''+date+'\')">'+(isEdit?"Save changes":"Add record")+'</button>';
+  h+='</div>';
+  document.getElementById("mdl").innerHTML=h;
+}
+
+function savePatient(date){
+  var n=document.getElementById("pat-name").value;
+  var pr=document.getElementById("pat-proc").value;
+  var dg=document.getElementById("pat-diag").value;
+  var dc=document.getElementById("pat-doc").value;
+  var nt=document.getElementById("pat-notes").value;
+  if(!n.trim()){alert("Please enter the patient name.");return;}
+  var entry={name:n,procedure:pr,diagnosis:dg,doctor:dc,notes:nt,time:new Date().toISOString()};
+  if(!S.patients[date])S.patients[date]=[];
+  if(patDraft.editIdx>=0){
+    entry.time=S.patients[date][patDraft.editIdx].time||entry.time;
+    S.patients[date][patDraft.editIdx]=entry;
+  }else{
+    S.patients[date].push(entry);
+  }
+  save();closeM();render();
+}
+
+function delPatient(date,idx){
+  if(!confirm("Delete this patient record?"))return;
+  var p=S.patients[date];if(!p)return;
+  p.splice(idx,1);if(p.length===0)delete S.patients[date];
+  save();render();
+}
+
 /* CLOCK */
 function clockIn(){S.cin={lt:new Date().toISOString()};save();render();}
 function clockOut(){
@@ -548,15 +640,32 @@ function exportXL(){
   rows.push({Date:"",Day:"",Schedule:"",Login:"",Logout:"TOTAL HOURS",Hours:th.toFixed(2),Status:"","Swap Details":""});
   var ws=XLSX.utils.json_to_sheet(rows);
   ws["!cols"]=[{wch:12},{wch:6},{wch:24},{wch:12},{wch:12},{wch:10},{wch:14},{wch:40}];
-  var wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,MO[m]+" "+y);
+  var wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,"Shifts "+MO[m]+" "+y);
+
+  var patRows=[];
+  for(var d=1;d<=tot;d++){
+    var ds2=y+"-"+String(m+1).padStart(2,"0")+"-"+String(d).padStart(2,"0");
+    var dt=pd(ds2);var dn=DAYS[dt.getDay()];
+    var pats=S.patients[ds2]||[];
+    for(var pi=0;pi<pats.length;pi++){
+      var p=pats[pi];
+      patRows.push({Date:ds2,Day:dn,"Patient Name":p.name,"Procedure Done":p.procedure,"Final Diagnosis":p.diagnosis,"Referring Doctor":p.doctor,"Additional Notes":p.notes});
+    }
+  }
+  if(patRows.length>0){
+    var ws2=XLSX.utils.json_to_sheet(patRows);
+    ws2["!cols"]=[{wch:12},{wch:6},{wch:24},{wch:28},{wch:28},{wch:22},{wch:30}];
+    XLSX.utils.book_append_sheet(wb,ws2,"Patients "+MO[m]+" "+y);
+  }
+
   XLSX.writeFile(wb,"Shift_Report_"+MO[m]+"_"+y+".xlsx");
 }
 
 /* RENDERERS */
 function renderTabs(){
-  var ic={schedule:'<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',clock:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',report:'<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>'};
-  var lb={schedule:"Schedule",clock:"Time clock",report:"Report"};
-  var ids=["schedule","clock","report"],h="";
+  var ic={schedule:'<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',clock:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',patients:'<svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>',report:'<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>'};
+  var lb={schedule:"Schedule",clock:"Time clock",patients:"Patients",report:"Report"};
+  var ids=["schedule","clock","patients","report"],h="";
   for(var i=0;i<ids.length;i++){var id=ids[i];h+='<button class="tbtn'+(S.tab===id?" act":"")+'" onclick="stab(\''+id+'\')">'+ic[id]+"<span>"+lb[id]+"</span></button>";}
   document.getElementById("tabs").innerHTML=h;
 }
@@ -640,10 +749,52 @@ function renderReport(){
   h+='<button class="xbtn" onclick="exportXL()">Export to Excel (.xlsx)</button>';return h;
 }
 
+function renderPatients(){
+  var today=fd(new Date());
+  var dobj=pd(patViewDate);
+  var isToday=patViewDate===today;
+
+  var h='<div class="mnav"><button onclick="patPrev()">&#8249;</button><span class="mlbl">'+dobj.toLocaleDateString([],{weekday:"long",month:"short",day:"numeric",year:"numeric"})+'</span><button onclick="patNext()">&#8250;</button></div>';
+
+  h+='<div class="pat-datepick">';
+  h+='<input class="finp pat-dateinp" type="date" value="'+patViewDate+'" onchange="patJump(this.value)" style="margin-bottom:0;flex:1">';
+  if(!isToday)h+='<button class="pat-today-btn" onclick="patJump(\''+today+'\')">Today</button>';
+  h+='</div>';
+
+  var records=S.patients[patViewDate]||[];
+
+  h+='<button class="add-pat-btn" onclick="openPatientForm(\''+patViewDate+'\',-1)"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add patient record</button>';
+
+  if(records.length===0){
+    h+='<div class="empty">No patient records for this day.<br>Tap the button above to add one.</div>';
+  }else{
+    for(var i=0;i<records.length;i++){
+      var p=records[i];
+      h+='<div class="pat-card">';
+      h+='<div class="pat-card-hdr"><div class="pat-card-num">'+(i+1)+'</div><div class="pat-card-name">'+esc(p.name)+'</div><div class="pat-card-actions">';
+      h+='<button class="pat-edit" onclick="openPatientForm(\''+patViewDate+'\','+i+')">Edit</button>';
+      h+='<button class="pat-del" onclick="delPatient(\''+patViewDate+'\','+i+')">&times;</button></div></div>';
+      if(p.procedure)h+='<div class="pat-field"><span class="pat-label">Procedure</span><span class="pat-value">'+esc(p.procedure)+'</span></div>';
+      if(p.diagnosis)h+='<div class="pat-field"><span class="pat-label">Diagnosis</span><span class="pat-value">'+esc(p.diagnosis)+'</span></div>';
+      if(p.doctor)h+='<div class="pat-field"><span class="pat-label">Doctor</span><span class="pat-value">'+esc(p.doctor)+'</span></div>';
+      if(p.notes)h+='<div class="pat-field"><span class="pat-label">Notes</span><span class="pat-value">'+esc(p.notes)+'</span></div>';
+      h+='</div>';
+    }
+  }
+
+  h+='<div class="pat-summary">'+records.length+' patient'+(records.length!==1?'s':'')+' recorded for this day</div>';
+  return h;
+}
+
+function patPrev(){var d=pd(patViewDate);d.setDate(d.getDate()-1);patViewDate=fd(d);render();}
+function patNext(){var d=pd(patViewDate);d.setDate(d.getDate()+1);patViewDate=fd(d);render();}
+function patJump(dateStr){if(dateStr){patViewDate=dateStr;render();}}
+
 function render(){
   renderTabs();var m=document.getElementById("main");
   if(S.tab==="schedule")m.innerHTML=renderSchedule();
   else if(S.tab==="clock")m.innerHTML=renderClock();
+  else if(S.tab==="patients")m.innerHTML=renderPatients();
   else m.innerHTML=renderReport();
 }
 
