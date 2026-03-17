@@ -15,6 +15,7 @@
   --red:#E24B4A;--red-bg:#FCEBEB;--red-tx:#A32D2D;
   --amber:#EF9F27;--amber-bg:#FAEEDA;--amber-tx:#854F0B;
   --pink:#D4537E;--pink-bg:#FBEAF0;--pink-tx:#993556;
+  --coral:#D85A30;--coral-bg:#FAECE7;--coral-tx:#993C1D;
   --g50:#F5F4F0;--g100:#E8E7E3;--g200:#D3D1C7;--g400:#888780;--g600:#5F5E5A;
   --bg:#fff;--bg2:#F5F4F0;--tx:#1a1a1a;--tx2:#5F5E5A;--tx3:#888780;--bdr:#E8E7E3;
   --r:10px;--rl:14px;
@@ -29,6 +30,7 @@
     --red:#F09595;--red-bg:#501313;--red-tx:#F7C1C1;
     --amber:#FAC775;--amber-bg:#412402;--amber-tx:#EF9F27;
     --pink:#ED93B1;--pink-bg:#4B1528;--pink-tx:#F4C0D1;
+    --coral:#F0997B;--coral-bg:#4A1B0C;--coral-tx:#F5C4B3;
     --g50:#2C2C2A;--g100:#444441;--g200:#5F5E5A;
   }
 }
@@ -66,6 +68,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue'
 .cd.em{cursor:default;pointer-events:none}
 .cd.tOFF{background:var(--g50)}.cd.tOFF .dn{color:var(--tx3);text-decoration:line-through}
 .cd.tLV{background:var(--amber-bg)}.cd.tSW{background:var(--pink-bg)}
+.cd.tSL{background:var(--coral-bg)}
 .cd.haslog::after{content:"";position:absolute;top:4px;right:4px;width:5px;height:5px;border-radius:50%;background:var(--teal)}
 .dots{display:flex;gap:2px;position:absolute;bottom:4px}
 .dt{width:5px;height:5px;border-radius:50%}
@@ -86,6 +89,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue'
 .mo.on-AM,.mo.on-PM,.mo.on-NT{border-color:var(--teal);background:var(--teal-bg)}
 .mo.on-OFF{border-color:var(--g400);background:var(--g50)}
 .mo.on-LV{border-color:var(--amber);background:var(--amber-bg)}
+.mo.on-SL{border-color:var(--coral);background:var(--coral-bg)}
 .mo.on-SW{border-color:var(--pink);background:var(--pink-bg)}
 .mo.lk{opacity:0.3;pointer-events:none}
 .mp{width:12px;height:12px;border-radius:50%;flex-shrink:0}
@@ -95,6 +99,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue'
 .mo.on-AM .mc,.mo.on-PM .mc,.mo.on-NT .mc{border-color:var(--teal);background:var(--teal);color:#fff}
 .mo.on-OFF .mc{border-color:var(--g400);background:var(--g400);color:#fff}
 .mo.on-LV .mc{border-color:var(--amber);background:var(--amber);color:#fff}
+.mo.on-SL .mc{border-color:var(--coral);background:var(--coral);color:#fff}
 .mo.on-SW .mc{border-color:var(--pink);background:var(--pink);color:#fff}
 
 .mbtns{display:flex;gap:10px;margin-top:16px}
@@ -148,6 +153,7 @@ textarea.finp{min-height:80px;resize:vertical}
 .s-out{background:var(--g50);color:var(--tx3)}
 .s-in{background:var(--teal-bg);color:var(--teal-tx)}
 .s-lv{background:var(--amber-bg);color:var(--amber-tx)}
+.s-sl{background:var(--coral-bg);color:var(--coral-tx)}
 .cbtn{width:130px;height:130px;border-radius:50%;border:none;font-size:16px;font-weight:600;cursor:pointer;transition:all .15s}
 .cbtn:active{transform:scale(.92)}
 .cb-in{background:var(--teal);color:#fff;box-shadow:0 4px 20px rgba(29,158,117,0.3)}
@@ -200,16 +206,17 @@ var SHIFTS=[
 ];
 var TAGS=[
   {id:"OFF",name:"Day off",short:"Day off",hex:"#888780",color:"var(--g400)",bg:"var(--g50)",tx:"var(--g600)"},
-  {id:"LV",name:"On-leave",short:"On-leave",hex:"#EF9F27",color:"var(--amber)",bg:"var(--amber-bg)",tx:"var(--amber-tx)"},
+  {id:"LV",name:"Vacation leave",short:"VL",hex:"#EF9F27",color:"var(--amber)",bg:"var(--amber-bg)",tx:"var(--amber-tx)"},
+  {id:"SL",name:"Sick leave",short:"SL",hex:"#D85A30",color:"var(--coral)",bg:"var(--coral-bg)",tx:"var(--coral-tx)"},
   {id:"SW",name:"Shift swap",short:"Shift swap",hex:"#D4537E",color:"var(--pink)",bg:"var(--pink-bg)",tx:"var(--pink-tx)"}
 ];
 var ALL=SHIFTS.concat(TAGS);
 var DAYS=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 var MO=["January","February","March","April","May","June","July","August","September","October","November","December"];
-var ORDER=["AM","PM","NT","OFF","LV","SW"];
+var ORDER=["AM","PM","NT","OFF","LV","SL","SW"];
 
 function gi(id){for(var i=0;i<ALL.length;i++){if(ALL[i].id===id)return ALL[i];}return null;}
-function isT(id){return id==="OFF"||id==="LV"||id==="SW";}
+function isT(id){return id==="OFF"||id==="LV"||id==="SL"||id==="SW";}
 function isS(id){return id==="AM"||id==="PM"||id==="NT";}
 function fd(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
 function pd(s){var p=s.split("-");return new Date(+p[0],+p[1]-1,+p[2]);}
@@ -256,8 +263,15 @@ function toggleItem(date,itemId){
   save();renderMainModal(date);render();
 }
 
-function clearDay(date){delete S.scheds[date];delete S.swaps[date];save();closeM();render();}
+function clearDay(date){
+  var dd=gdd(date);var logs=S.logs[date]||[];
+  var msg="Are you sure you want to clear this day?";
+  if(logs.length>0)msg+="\n\nThis will remove the schedule and swap info.\nTime log entries ("+logs.length+" record"+(logs.length>1?"s":"")+") will be kept.";
+  if(!confirm(msg))return;
+  delete S.scheds[date];delete S.swaps[date];save();closeM();render();
+}
 function removeSwap(date){
+  if(!confirm("Remove this shift swap?"))return;
   var cur=(S.scheds[date]||[]).slice();var idx=cur.indexOf("SW");if(idx>=0)cur.splice(idx,1);
   if(cur.length===0)delete S.scheds[date];else S.scheds[date]=cur;
   delete S.swaps[date];save();renderMainModal(date);render();
@@ -341,6 +355,7 @@ function renderMainModal(date){
 }
 
 function delLogModal(date,idx){
+  if(!confirm("Delete this time log entry?"))return;
   var l=S.logs[date];if(!l)return;l.splice(idx,1);
   if(l.length===0)delete S.logs[date];
   save();renderMainModal(date);render();
@@ -503,7 +518,7 @@ function clockOut(){
   var entry={lt:S.cin.lt,lo:t,sh:dsh(S.cin.lt)};
   if(!S.logs[day])S.logs[day]=[];S.logs[day].push(entry);S.cin=null;save();render();
 }
-function delLog(date,idx){var l=S.logs[date];if(!l)return;l.splice(idx,1);if(l.length===0)delete S.logs[date];save();render();}
+function delLog(date,idx){if(!confirm("Delete this time log entry?"))return;var l=S.logs[date];if(!l)return;l.splice(idx,1);if(l.length===0)delete S.logs[date];save();render();}
 
 /* EXPORT */
 function exportXL(){
@@ -560,7 +575,7 @@ function renderSchedule(){
     var isToday=ds2===today,isSel=ds2===sel,dd=gdd(ds2),hasData=dd.all.length>0;
     var hasLog=!!(S.logs[ds2]&&S.logs[ds2].length>0);
     var tc="";
-    if(dd.tags.indexOf("OFF")>=0)tc=" tOFF";else if(dd.tags.indexOf("LV")>=0)tc=" tLV";else if(dd.tags.indexOf("SW")>=0)tc=" tSW";
+    if(dd.tags.indexOf("OFF")>=0)tc=" tOFF";else if(dd.tags.indexOf("LV")>=0)tc=" tLV";else if(dd.tags.indexOf("SL")>=0)tc=" tSL";else if(dd.tags.indexOf("SW")>=0)tc=" tSW";
     var dotItems=dd.shifts.length>0?dd.shifts:dd.tags;
     var dots="";
     if(dotItems.length>0){dots='<div class="dots">';for(var j=0;j<dotItems.length;j++){var it=gi(dotItems[j]);if(it)dots+='<span class="dt" style="background:'+it.hex+'"></span>';}dots+='</div>';}
@@ -571,17 +586,17 @@ function renderSchedule(){
 
 function renderClock(){
   var now=new Date(),today=fd(now),isIn=!!S.cin,dd=gdd(today),tl=S.logs[today]||[];
-  var isDO=dd.tags.indexOf("OFF")>=0,isLV=dd.tags.indexOf("LV")>=0;
+  var isDO=dd.tags.indexOf("OFF")>=0,isLV=dd.tags.indexOf("LV")>=0,isSL=dd.tags.indexOf("SL")>=0;
   var h='<div class="ccard"><div class="ctime" id="lc">'+now.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:true})+'</div>';
   h+='<div class="cdate">'+now.toLocaleDateString([],{weekday:"long",month:"long",day:"numeric",year:"numeric"})+'</div>';
   if(dd.all.length>0){h+='<div class="cscheds">';for(var i=0;i<dd.all.length;i++){var it=gi(dd.all[i]);if(it)h+='<span class="rb" style="background:'+it.bg+";color:"+it.tx+'">'+it.short+'</span>';}h+='</div>';}
-  if(isIn)h+='<div class="cstat s-in">CLOCKED IN</div>';else if(isDO)h+='<div class="cstat s-out">DAY OFF</div>';else if(isLV)h+='<div class="cstat s-lv">ON LEAVE</div>';else h+='<div class="cstat s-out">OFF DUTY</div>';
+  if(isIn)h+='<div class="cstat s-in">CLOCKED IN</div>';else if(isDO)h+='<div class="cstat s-out">DAY OFF</div>';else if(isLV)h+='<div class="cstat s-lv">VACATION LEAVE</div>';else if(isSL)h+='<div class="cstat s-sl">SICK LEAVE</div>';else h+='<div class="cstat s-out">OFF DUTY</div>';
   h+='<br>';
-  if(isIn)h+='<button class="cbtn cb-out" onclick="clockOut()">Clock out</button>';else if(isDO||isLV)h+='<button class="cbtn cb-dis" disabled>Clock in</button>';else h+='<button class="cbtn cb-in" onclick="clockIn()">Clock in</button>';
+  if(isIn)h+='<button class="cbtn cb-out" onclick="clockOut()">Clock out</button>';else if(isDO||isLV||isSL)h+='<button class="cbtn cb-dis" disabled>Clock in</button>';else h+='<button class="cbtn cb-in" onclick="clockIn()">Clock in</button>';
   if(isIn)h+='<div class="csince">Since '+ft(S.cin.lt)+'</div>';
   h+='</div><div class="tlhdr">Today\'s log</div>';
   if(tl.length===0&&!isIn){
-    if(isDO)h+='<div class="dom">Enjoy your day off!</div>';else if(isLV)h+='<div class="dom">You are on leave today.</div>';else h+='<div class="empty">No time entries today.<br>Tap the button above to clock in.</div>';
+    if(isDO)h+='<div class="dom">Enjoy your day off!</div>';else if(isLV)h+='<div class="dom">You are on vacation leave today.</div>';else if(isSL)h+='<div class="dom">You are on sick leave today. Get well soon!</div>';else h+='<div class="empty">No time entries today.<br>Tap the button above to clock in.</div>';
   }else{
     for(var i=0;i<tl.length;i++){
       var l=tl[i],s=gi(l.sh),iT=new Date(l.lt),oT=l.lo?new Date(l.lo):null;
@@ -597,17 +612,18 @@ function renderClock(){
 
 function renderReport(){
   var y=S.vy,m=S.vm,tot=dim(y,m);
-  var th=0,dw=0,doff=0,dlv=0,entries=[];
+  var th=0,dw=0,doff=0,dlv=0,dsl=0,entries=[];
   for(var d=1;d<=tot;d++){
     var ds2=y+"-"+String(m+1).padStart(2,"0")+"-"+String(d).padStart(2,"0");
     var dt=pd(ds2),dd=gdd(ds2),logs=S.logs[ds2]||[],dh=0;
     for(var i=0;i<logs.length;i++){if(logs[i].lo)dh+=(new Date(logs[i].lo)-new Date(logs[i].lt))/3600000;}
-    if(logs.length>0)dw++;if(dd.tags.indexOf("OFF")>=0)doff++;if(dd.tags.indexOf("LV")>=0)dlv++;
+    if(logs.length>0)dw++;if(dd.tags.indexOf("OFF")>=0)doff++;if(dd.tags.indexOf("LV")>=0)dlv++;if(dd.tags.indexOf("SL")>=0)dsl++;
     th+=dh;if(dd.all.length>0||logs.length>0)entries.push({ds:ds2,dt:dt,dd:dd,logs:logs,dh:dh});
   }
   var h='<div class="mnav"><button onclick="pm()">&#8249;</button><span class="mlbl">'+MO[m]+" "+y+'</span><button onclick="nm()">&#8250;</button></div>';
   h+='<div class="srow"><div class="sc"><div class="scl">Total hours</div><div class="scv">'+th.toFixed(1)+'h</div></div><div class="sc"><div class="scl">Days worked</div><div class="scv">'+dw+'</div></div></div>';
-  h+='<div class="srow"><div class="sc"><div class="scl">Days off</div><div class="scv">'+doff+'</div></div><div class="sc"><div class="scl">On leave</div><div class="scv">'+dlv+'</div></div></div>';
+  h+='<div class="srow"><div class="sc"><div class="scl">Days off</div><div class="scv">'+doff+'</div></div><div class="sc"><div class="scl">Vacation leave</div><div class="scv">'+dlv+'</div></div></div>';
+  h+='<div class="srow"><div class="sc"><div class="scl">Sick leave</div><div class="scv">'+dsl+'</div></div><div class="sc"><div class="scl">&nbsp;</div><div class="scv">&nbsp;</div></div></div>';
   if(entries.length===0){h+='<div class="empty">No data for this month yet.</div>';}
   else{
     for(var e=0;e<entries.length;e++){
