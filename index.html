@@ -39,8 +39,10 @@ html,body{height:100%;overflow:hidden}
 body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',sans-serif;color:var(--tx);background:var(--bg);display:flex;flex-direction:column;padding-top:var(--sat)}
 
 .hdr{padding:16px 20px 12px;background:var(--bg);border-bottom:0.5px solid var(--bdr);flex-shrink:0}
-.hdr h1{font-size:20px;font-weight:600;letter-spacing:-0.3px}
+.hdr h1{font-size:20px;font-weight:600;letter-spacing:-0.3px;display:flex;align-items:center;gap:8px}
 .hdr p{font-size:12px;color:var(--tx3);margin-top:2px}
+.hdr-gear{background:none;border:none;color:var(--tx3);cursor:pointer;padding:4px;border-radius:6px;display:flex;align-items:center;margin-left:auto}
+.hdr-gear:active{background:var(--bg2)}
 .main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 16px 110px}
 
 .tbar{position:fixed;bottom:0;left:0;right:0;display:flex;background:var(--bg);border-top:0.5px solid var(--bdr);padding:6px 0 calc(6px + var(--sab));z-index:50}
@@ -67,7 +69,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue'
 .cd.hd .dn{font-weight:700}
 .cd.em{cursor:default;pointer-events:none}
 .cd.tOFF{background:var(--g50)}.cd.tOFF .dn{color:var(--tx3);text-decoration:line-through}
-.cd.tLV{background:var(--amber-bg)}.cd.tSW{background:var(--pink-bg)}
+.cd.tLV{background:var(--amber-bg)}
 .cd.tSL{background:var(--coral-bg)}
 .cd.haslog::after{content:"";position:absolute;top:4px;right:4px;width:5px;height:5px;border-radius:50%;background:var(--teal)}
 .dots{display:flex;gap:2px;position:absolute;bottom:4px}
@@ -90,7 +92,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue'
 .mo.on-OFF{border-color:var(--g400);background:var(--g50)}
 .mo.on-LV{border-color:var(--amber);background:var(--amber-bg)}
 .mo.on-SL{border-color:var(--coral);background:var(--coral-bg)}
-.mo.on-SW{border-color:var(--pink);background:var(--pink-bg)}
 .mo.lk{opacity:0.3;pointer-events:none}
 .mp{width:12px;height:12px;border-radius:50%;flex-shrink:0}
 .mpsq{width:12px;height:12px;border-radius:3px;flex-shrink:0}
@@ -100,7 +101,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue'
 .mo.on-OFF .mc{border-color:var(--g400);background:var(--g400);color:#fff}
 .mo.on-LV .mc{border-color:var(--amber);background:var(--amber);color:#fff}
 .mo.on-SL .mc{border-color:var(--coral);background:var(--coral);color:#fff}
-.mo.on-SW .mc{border-color:var(--pink);background:var(--pink);color:#fff}
 
 .mbtns{display:flex;gap:10px;margin-top:16px}
 .mb-clr{flex:1;padding:14px;border:1px dashed var(--bdr);border-radius:var(--r);background:none;color:var(--red);font-size:14px;font-weight:500;cursor:pointer}
@@ -126,7 +126,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue'
 .sw-back{display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:16px;font-size:14px;font-weight:500}
 .sw-back:active{opacity:.7}
 .sw-back svg{width:18px;height:18px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.back-pink{color:var(--pink)}.back-pink svg{stroke:var(--pink)}
 .back-blue{color:var(--blue)}.back-blue svg{stroke:var(--blue)}
 .flbl{font-size:12px;font-weight:600;color:var(--tx2);margin-bottom:6px;display:block}
 .finp{width:100%;padding:12px 14px;border:1.5px solid var(--bdr);border-radius:var(--r);font-size:14px;background:var(--bg);color:var(--tx);margin-bottom:16px;font-family:inherit;outline:none;-webkit-appearance:none;appearance:none}
@@ -141,7 +140,6 @@ textarea.finp{min-height:80px;resize:vertical}
 .spill.s-AM{border-color:var(--teal);background:var(--teal-bg);color:var(--teal-tx)}
 .spill.s-PM{border-color:var(--blue);background:var(--blue-bg);color:var(--blue-tx)}
 .spill.s-NT{border-color:var(--purp);background:var(--purp-bg);color:var(--purp-tx)}
-.sw-info{background:var(--pink-bg);border-radius:var(--r);padding:12px 14px;margin-bottom:16px;font-size:12px;color:var(--pink-tx)}
 .log-form-info{background:var(--blue-bg);border-radius:var(--r);padding:12px 14px;margin-bottom:16px;font-size:12px;color:var(--blue-tx)}
 
 /* Clock */
@@ -246,14 +244,27 @@ textarea.ch-inp{min-height:70px;resize:vertical}
 .rpt-check-row{display:flex;align-items:flex-start;gap:6px;padding:6px 0;font-size:13px}
 .rpt-check-num{min-width:36px;font-weight:600;text-align:right;color:var(--teal-tx)}
 .rpt-check-txt{flex:1;color:var(--tx2)}
+
+/* Data modal */
+.data-opt{display:flex;align-items:center;gap:14px;padding:16px;border:1.5px solid var(--bdr);border-radius:var(--r);margin-bottom:10px;cursor:pointer;transition:all .12s}
+.data-opt:active{transform:scale(.98);background:var(--bg2)}
+.data-opt svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.data-opt-info{flex:1}
+.data-opt-title{font-size:14px;font-weight:600;margin-bottom:2px}
+.data-opt-desc{font-size:12px;color:var(--tx3)}
+.data-opt-export{color:var(--teal);border-color:var(--teal)}
+.data-opt-import{color:var(--blue);border-color:var(--blue)}
+.data-opt-clear{color:var(--red);border-color:var(--red)}
+.data-timestamp{text-align:center;font-size:11px;color:var(--tx3);margin-top:8px;padding:8px 0}
 </style>
 </head>
 <body>
 
-<div class="hdr"><h1>ShiftLog</h1><p>Camarines Norte Provincial Hospital</p></div>
+<div class="hdr"><h1>ShiftLog<button class="hdr-gear" onclick="openDataModal()" title="Backup &amp; Restore"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button></h1><p>Camarines Norte Provincial Hospital</p></div>
 <div class="main" id="main"></div>
 <div class="tbar" id="tabs"></div>
 <div class="ov" id="ov" onclick="closeBg(event)"><div class="mdl" id="mdl"></div></div>
+<input type="file" id="import-file" accept=".json" style="display:none" onchange="handleImport(this)">
 
 <script>
 var SHIFTS=[
@@ -264,16 +275,15 @@ var SHIFTS=[
 var TAGS=[
   {id:"OFF",name:"Day off",short:"Day off",hex:"#888780",color:"var(--g400)",bg:"var(--g50)",tx:"var(--g600)"},
   {id:"LV",name:"Vacation leave",short:"VL",hex:"#EF9F27",color:"var(--amber)",bg:"var(--amber-bg)",tx:"var(--amber-tx)"},
-  {id:"SL",name:"Sick leave",short:"SL",hex:"#D85A30",color:"var(--coral)",bg:"var(--coral-bg)",tx:"var(--coral-tx)"},
-  {id:"SW",name:"Shift swap",short:"Shift swap",hex:"#D4537E",color:"var(--pink)",bg:"var(--pink-bg)",tx:"var(--pink-tx)"}
+  {id:"SL",name:"Sick leave",short:"SL",hex:"#D85A30",color:"var(--coral)",bg:"var(--coral-bg)",tx:"var(--coral-tx)"}
 ];
 var ALL=SHIFTS.concat(TAGS);
 var DAYS=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 var MO=["January","February","March","April","May","June","July","August","September","October","November","December"];
-var ORDER=["AM","PM","NT","OFF","LV","SL","SW"];
+var ORDER=["AM","PM","NT","OFF","LV","SL"];
 
 function gi(id){for(var i=0;i<ALL.length;i++){if(ALL[i].id===id)return ALL[i];}return null;}
-function isT(id){return id==="OFF"||id==="LV"||id==="SL"||id==="SW";}
+function isT(id){return id==="OFF"||id==="LV"||id==="SL";}
 function isS(id){return id==="AM"||id==="PM"||id==="NT";}
 function fd(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
 function pd(s){var p=s.split("-");return new Date(+p[0],+p[1]-1,+p[2]);}
@@ -283,14 +293,13 @@ function fdom(y,m){return new Date(y,m,1).getDay();}
 function dsh(iso){var h=new Date(iso).getHours();if(h>=5&&h<10)return"AM";if(h>=10&&h<18)return"PM";return"NT";}
 function srt(a){return a.slice().sort(function(x,y){return ORDER.indexOf(x)-ORDER.indexOf(y);});}
 
-var K="cnph-v8";
-var S={tab:"schedule",vy:new Date().getFullYear(),vm:new Date().getMonth(),sel:fd(new Date()),scheds:{},logs:{},cin:null,swaps:{},patients:{},charge:{}};
+var K="cnph-v9";
+var S={tab:"schedule",vy:new Date().getFullYear(),vm:new Date().getMonth(),sel:fd(new Date()),scheds:{},logs:{},cin:null,swapNotes:{},patients:{},charge:{}};
 var modalDate="";
-var swapDraft={nurse:"",date:"",shift:"",notes:""};
 var logDraft={login:"",logout:"",shift:"",editIdx:-1};
 
-function save(){try{localStorage.setItem(K,JSON.stringify({s:S.scheds,l:S.logs,c:S.cin,sw:S.swaps,p:S.patients,ch:S.charge}));}catch(e){}}
-function load(){try{var r=localStorage.getItem(K);if(r){var d=JSON.parse(r);S.scheds=d.s||{};S.logs=d.l||{};S.cin=d.c||null;S.swaps=d.sw||{};S.patients=d.p||{};S.charge=d.ch||{};}}catch(e){}}
+function save(){try{localStorage.setItem(K,JSON.stringify({s:S.scheds,l:S.logs,c:S.cin,sn:S.swapNotes,p:S.patients,ch:S.charge}));}catch(e){}}
+function load(){try{var r=localStorage.getItem(K);if(r){var d=JSON.parse(r);S.scheds=d.s||{};S.logs=d.l||{};S.cin=d.c||null;S.swapNotes=d.sn||{};S.patients=d.p||{};S.charge=d.ch||{};}}catch(e){}}
 
 function gdd(date){
   var raw=S.scheds[date]||[];
@@ -305,12 +314,11 @@ function nm(){S.vm++;if(S.vm>11){S.vm=0;S.vy++;}render();}
 function selDay(d){S.sel=d;modalDate=d;render();openMain(d);}
 
 function toggleItem(date,itemId){
-  if(itemId==="SW"){openSwapForm(date);return;}
   var cur=(S.scheds[date]||[]).slice();
   if(isT(itemId)){
     var has=cur.indexOf(itemId)>=0;
     if(has){cur.splice(cur.indexOf(itemId),1);}
-    else{if(itemId==="OFF"){cur=["OFF"];delete S.swaps[date];}else{cur=cur.filter(function(id){return id!=="OFF";});cur.push(itemId);}}
+    else{if(itemId==="OFF"){cur=["OFF"];}else{cur=cur.filter(function(id){return id!=="OFF";});cur.push(itemId);}}
   }else{
     if(cur.indexOf("OFF")>=0)return;
     var idx=cur.indexOf(itemId);if(idx>=0)cur.splice(idx,1);else cur.push(itemId);
@@ -323,15 +331,9 @@ function toggleItem(date,itemId){
 function clearDay(date){
   var dd=gdd(date);var logs=S.logs[date]||[];
   var msg="Are you sure you want to clear this day?";
-  if(logs.length>0)msg+="\n\nThis will remove the schedule and swap info.\nTime log entries ("+logs.length+" record"+(logs.length>1?"s":"")+") will be kept.";
+  if(logs.length>0)msg+="\n\nThis will remove the schedule and swap notes.\nTime log entries ("+logs.length+" record"+(logs.length>1?"s":"")+") will be kept.";
   if(!confirm(msg))return;
-  delete S.scheds[date];delete S.swaps[date];save();closeM();render();
-}
-function removeSwap(date){
-  if(!confirm("Remove this shift swap?"))return;
-  var cur=(S.scheds[date]||[]).slice();var idx=cur.indexOf("SW");if(idx>=0)cur.splice(idx,1);
-  if(cur.length===0)delete S.scheds[date];else S.scheds[date]=cur;
-  delete S.swaps[date];save();renderMainModal(date);render();
+  delete S.scheds[date];delete S.swapNotes[date];save();closeM();render();
 }
 
 /* MODAL */
@@ -344,9 +346,8 @@ function openMain(date){modalDate=date;openM();renderMainModal(date);}
 function renderMainModal(date){
   var dd=gdd(date);var dobj=pd(date);
   var hasDO=dd.tags.indexOf("OFF")>=0;
-  var hasSW=dd.tags.indexOf("SW")>=0;
-  var swap=S.swaps[date];
   var logs=S.logs[date]||[];
+  var swNote=S.swapNotes[date]||"";
 
   var h='<div class="mh"></div>';
   h+='<div class="mt">'+dobj.toLocaleDateString([],{weekday:"long",month:"long",day:"numeric"})+'</div>';
@@ -364,23 +365,14 @@ function renderMainModal(date){
   h+='<div class="msl">Status</div>';
   for(var i=0;i<TAGS.length;i++){
     var t=TAGS[i],on=dd.tags.indexOf(t.id)>=0;
-    if(t.id==="SW"&&hasDO)continue;
     h+='<div class="mo'+(on?" on-"+t.id:"")+'" onclick="toggleItem(\''+date+"','"+t.id+"')\">";
     h+='<span class="mpsq" style="background:'+t.color+'"></span>';
     h+='<div class="mi"><div class="mn">'+t.name+'</div></div>';
     h+='<span class="mc">'+(on?"&#10003;":"")+'</span></div>';
   }
 
-  if(hasSW&&swap){
-    var swSh=gi(swap.shift);
-    h+='<div class="sw-info"><strong>Swap details:</strong><br>With: '+swap.nurse+'<br>New schedule: '+swap.date+(swSh?" ("+swSh.short+")":"")+'<br>';
-    if(swap.notes)h+='Notes: '+swap.notes;
-    h+='</div>';
-    h+='<div style="display:flex;gap:8px;margin-bottom:8px">';
-    h+='<button style="flex:1;padding:10px;border:1.5px solid var(--pink);border-radius:var(--r);background:none;color:var(--pink);font-size:13px;font-weight:500;cursor:pointer" onclick="openSwapForm(\''+date+'\')">Edit swap</button>';
-    h+='<button style="flex:1;padding:10px;border:1px dashed var(--bdr);border-radius:var(--r);background:none;color:var(--red);font-size:13px;font-weight:500;cursor:pointer" onclick="removeSwap(\''+date+'\')">Remove swap</button>';
-    h+='</div>';
-  }
+  h+='<div class="msl">Swap notes</div>';
+  h+='<textarea class="finp" id="swap-note" placeholder="e.g. Swapped with Nurse Santos, took her March 20 PM shift" onblur="saveSwapNote(\''+date+'\')" style="min-height:60px;resize:vertical">'+esc(swNote)+'</textarea>';
 
   /* TIME LOG SECTION */
   h+='<div class="log-section">';
@@ -521,51 +513,14 @@ function saveLog(date){
 }
 
 /* SWAP FORM */
-function openSwapForm(date){
-  modalDate=date;
-  var existing=S.swaps[date];
-  if(existing){swapDraft={nurse:existing.nurse||"",date:existing.date||"",shift:existing.shift||"",notes:existing.notes||""};}
-  else{swapDraft={nurse:"",date:"",shift:"",notes:""};}
-  openM();renderSwapForm(date);
-}
-
-function renderSwapForm(date){
-  var dobj=pd(date);
-  var h='<div class="mh"></div>';
-  h+='<div class="sw-back back-pink" onclick="openMain(\''+date+'\')">';
-  h+='<svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Back</div>';
-  h+='<div class="mt">Shift swap details</div>';
-  h+='<div class="ms">'+dobj.toLocaleDateString([],{weekday:"long",month:"long",day:"numeric"})+'</div>';
-
-  h+='<label class="flbl">Swap schedule with</label>';
-  h+='<input class="finp" type="text" id="sw-nurse" placeholder="Name of nurse" value="'+esc(swapDraft.nurse)+'" oninput="swapDraft.nurse=this.value">';
-  h+='<label class="flbl">New schedule date</label>';
-  h+='<input class="finp" type="date" id="sw-date" value="'+swapDraft.date+'" oninput="swapDraft.date=this.value">';
-  h+='<label class="flbl">New schedule shift</label>';
-  h+='<div class="shift-pills">';
-  for(var i=0;i<SHIFTS.length;i++){var s=SHIFTS[i],sel=swapDraft.shift===s.id;h+='<div class="spill'+(sel?" s-"+s.id:"")+'" onclick="pickSwapShift(\''+s.id+'\',\''+date+'\')">'+s.short+'</div>';}
-  h+='</div>';
-  h+='<label class="flbl">Notes</label>';
-  h+='<textarea class="finp" id="sw-notes" placeholder="Optional notes" oninput="swapDraft.notes=this.value">'+esc(swapDraft.notes)+'</textarea>';
-  h+='<div class="mbtns"><button class="mb-clr" onclick="openMain(\''+date+'\')">Cancel</button>';
-  h+='<button class="mb-done" onclick="saveSwap(\''+date+'\')">Save swap</button></div>';
-  document.getElementById("mdl").innerHTML=h;
-}
-
 function esc(s){return String(s).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
-function pickSwapShift(shiftId,date){swapDraft.shift=shiftId;renderSwapForm(date);}
 
-function saveSwap(date){
-  swapDraft.nurse=document.getElementById("sw-nurse").value;
-  swapDraft.date=document.getElementById("sw-date").value;
-  swapDraft.notes=document.getElementById("sw-notes").value;
-  if(!swapDraft.nurse.trim()){alert("Please enter the nurse name.");return;}
-  S.swaps[date]={nurse:swapDraft.nurse,date:swapDraft.date,shift:swapDraft.shift,notes:swapDraft.notes};
-  var cur=(S.scheds[date]||[]).slice();
-  if(cur.indexOf("SW")<0){cur.push("SW");cur=srt(cur);}
-  cur=cur.filter(function(id){return id!=="OFF";});
-  S.scheds[date]=cur;
-  save();openMain(date);render();
+function saveSwapNote(date){
+  var el=document.getElementById("swap-note");
+  if(!el)return;
+  var val=el.value.trim();
+  if(val){S.swapNotes[date]=val;}else{delete S.swapNotes[date];}
+  save();
 }
 
 /* PATIENTS */
@@ -703,7 +658,7 @@ function renderSchedule(){
     var isToday=ds2===today,isSel=ds2===sel,dd=gdd(ds2),hasData=dd.all.length>0;
     var hasLog=!!(S.logs[ds2]&&S.logs[ds2].length>0);
     var tc="";
-    if(dd.tags.indexOf("OFF")>=0)tc=" tOFF";else if(dd.tags.indexOf("LV")>=0)tc=" tLV";else if(dd.tags.indexOf("SL")>=0)tc=" tSL";else if(dd.tags.indexOf("SW")>=0)tc=" tSW";
+    if(dd.tags.indexOf("OFF")>=0)tc=" tOFF";else if(dd.tags.indexOf("LV")>=0)tc=" tLV";else if(dd.tags.indexOf("SL")>=0)tc=" tSL";
     var dotItems=dd.shifts.length>0?dd.shifts:dd.tags;
     var dots="";
     if(dotItems.length>0){dots='<div class="dots">';for(var j=0;j<dotItems.length;j++){var it=gi(dotItems[j]);if(it)dots+='<span class="dt" style="background:'+it.hex+'"></span>';}dots+='</div>';}
@@ -1001,22 +956,21 @@ function buildTimeRecordSheet(md){
     totalShifts+=shiftCount;
     var tp=[];for(var j=0;j<dy.dd.tags.length;j++){var it=gi(dy.dd.tags[j]);if(it)tp.push(it.short);}
     var stStr=tp.join(", ");
-    var swap=S.swaps[dy.ds];var swStr="";
-    if(swap){var swSh=gi(swap.shift);swStr="Swap with: "+swap.nurse;if(swap.date)swStr+=", New: "+swap.date;if(swSh)swStr+=" ("+swSh.short+")";if(swap.notes)swStr+=", "+swap.notes;}
+    var swNote=S.swapNotes[dy.ds]||"";
     if(dy.logs.length===0){
-      rows.push({Date:dy.ds,Day:dn,Schedule:schStr,Login:"",Logout:"",Status:stStr,"Swap Details":swStr});
+      rows.push({Date:dy.ds,Day:dn,Schedule:schStr,Login:"",Logout:"",Status:stStr,"Swap Notes":swNote});
     }else{
       for(var li=0;li<dy.logs.length;li++){
         var l=dy.logs[li],iT=new Date(l.lt),oT=l.lo?new Date(l.lo):null;
         rows.push({Date:li===0?dy.ds:"",Day:li===0?dn:"",Schedule:li===0?schStr:"",
           Login:iT.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit",hour12:true}),
           Logout:oT?oT.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit",hour12:true}):"(active)",
-          Status:li===0?stStr:"","Swap Details":li===0?swStr:""});
+          Status:li===0?stStr:"","Swap Notes":li===0?swNote:""});
       }
     }
   }
-  rows.push({Date:"",Day:"",Schedule:"",Login:"",Logout:"",Status:"",  "Swap Details":""});
-  rows.push({Date:"TOTAL SHIFTS",Day:"",Schedule:totalShifts,Login:"",Logout:"",Status:"","Swap Details":""});
+  rows.push({Date:"",Day:"",Schedule:"",Login:"",Logout:"",Status:"","Swap Notes":""});
+  rows.push({Date:"TOTAL SHIFTS",Day:"",Schedule:totalShifts,Login:"",Logout:"",Status:"","Swap Notes":""});
   var ws=XLSX.utils.json_to_sheet(rows);
   ws["!cols"]=[{wch:12},{wch:6},{wch:24},{wch:12},{wch:12},{wch:14},{wch:40}];
   return ws;
@@ -1117,6 +1071,97 @@ function exportAll(){
   XLSX.utils.book_append_sheet(wb,buildAccomplishmentSheet(md),"Accomplishment");
   XLSX.utils.book_append_sheet(wb,buildChargeSheet(md),"Charge Nurse");
   XLSX.writeFile(wb,"Shift_Report_"+MO[md.m]+"_"+md.y+".xlsx");
+}
+
+/* DATA BACKUP & RESTORE */
+function openDataModal(){
+  openM();
+  var h='<div class="mh"></div>';
+  h+='<div class="mt">Backup &amp; restore</div>';
+  h+='<div class="ms">Transfer your data between devices or create a backup.</div>';
+
+  h+='<div class="data-opt data-opt-export" onclick="exportData()">';
+  h+='<svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>';
+  h+='<div class="data-opt-info"><div class="data-opt-title">Export data</div><div class="data-opt-desc">Download all your data as a backup file. Send this file to your other device to restore.</div></div></div>';
+
+  h+='<div class="data-opt data-opt-import" onclick="document.getElementById(\'import-file\').click()">';
+  h+='<svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>';
+  h+='<div class="data-opt-info"><div class="data-opt-title">Import data</div><div class="data-opt-desc">Load a backup file from another device. This will replace all current data on this device.</div></div></div>';
+
+  h+='<div class="data-opt data-opt-clear" onclick="clearAllData()">';
+  h+='<svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>';
+  h+='<div class="data-opt-info"><div class="data-opt-title">Clear all data</div><div class="data-opt-desc">Permanently delete all data on this device. This cannot be undone.</div></div></div>';
+
+  var raw=localStorage.getItem(K);
+  if(raw){
+    var bytes=new Blob([raw]).size;
+    var kb=(bytes/1024).toFixed(1);
+    h+='<div class="data-timestamp">Data size: '+kb+' KB</div>';
+  }
+
+  h+='<div class="mbtns"><button class="mb-done" onclick="closeM()">Close</button></div>';
+  document.getElementById("mdl").innerHTML=h;
+}
+
+function exportData(){
+  var raw=localStorage.getItem(K);
+  if(!raw){alert("No data to export.");return;}
+  var data=JSON.parse(raw);
+  data._exported=new Date().toISOString();
+  data._app="ShiftLog";
+  data._version="v5";
+  var blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement("a");
+  a.href=url;
+  var now=new Date();
+  a.download="ShiftLog_Backup_"+now.getFullYear()+String(now.getMonth()+1).padStart(2,"0")+String(now.getDate()).padStart(2,"0")+".json";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  alert("Backup downloaded! Send this file to your other device via AirDrop, email, or messaging app.");
+}
+
+function handleImport(input){
+  var file=input.files[0];
+  if(!file)return;
+  var reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      var data=JSON.parse(e.target.result);
+      if(!data.s&&!data.l&&!data.p&&!data.ch){
+        alert("This file does not appear to be a valid ShiftLog backup.");
+        return;
+      }
+      if(!confirm("This will replace ALL data on this device with the backup data.\n\nAre you sure you want to continue?")){
+        input.value="";return;
+      }
+      S.scheds=data.s||{};
+      S.logs=data.l||{};
+      S.cin=data.c||null;
+      S.swapNotes=data.sn||{};
+      S.patients=data.p||{};
+      S.charge=data.ch||{};
+      save();
+      closeM();
+      render();
+      alert("Data restored successfully! All schedules, time logs, patient records, and charge nurse data have been loaded.");
+    }catch(err){
+      alert("Error reading file. Please make sure you selected a valid ShiftLog backup file.");
+    }
+    input.value="";
+  };
+  reader.readAsText(file);
+}
+
+function clearAllData(){
+  if(!confirm("This will permanently DELETE all data on this device:\n\n- All schedules\n- All time logs\n- All patient records\n- All charge nurse data\n- All swap notes\n\nThis CANNOT be undone. Are you sure?"))return;
+  if(!confirm("Are you REALLY sure? Export a backup first if you want to keep your data."))return;
+  localStorage.removeItem(K);
+  S.scheds={};S.logs={};S.cin=null;S.swapNotes={};S.patients={};S.charge={};
+  closeM();render();
+  alert("All data has been cleared.");
 }
 
 function render(){
