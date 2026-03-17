@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ShiftLog">
+<title>ShiftLog</title>
+<style>
+:root{
+  --teal:#1D9E75;--teal-bg:#E1F5EE;--teal-tx:#0F6E56;
+  --blue:#378ADD;--blue-bg:#E6F1FB;--blue-tx:#185FA5;
+  --purp:#534AB7;--purp-bg:#EEEDFE;--purp-tx:#3C3489;
+  --red:#E24B4A;--red-bg:#FCEBEB;--red-tx:#A32D2D;
+  --amber:#EF9F27;--amber-bg:#FAEEDA;--amber-tx:#854F0B;
+  --pink:#D4537E;--pink-bg:#FBEAF0;--pink-tx:#993556;
+  --g50:#F5F4F0;--g100:#E8E7E3;--g200:#D3D1C7;--g400:#888780;--g600:#5F5E5A;
+  --bg:#fff;--bg2:#F5F4F0;--tx:#1a1a1a;--tx2:#5F5E5A;--tx3:#888780;--bdr:#E8E7E3;
+  --r:10px;--rl:14px;
+  --sat:env(safe-area-inset-top,0px);--sab:env(safe-area-inset-bottom,0px);
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg:#1a1a1a;--bg2:#2C2C2A;--tx:#F5F4F0;--tx2:#B4B2A9;--tx3:#888780;--bdr:#444441;
+    --teal:#5DCAA5;--teal-bg:#085041;--teal-tx:#9FE1CB;
+    --blue:#85B7EB;--blue-bg:#042C53;--blue-tx:#B5D4F4;
+    --purp:#AFA9EC;--purp-bg:#26215C;--purp-tx:#CECBF6;
+    --red:#F09595;--red-bg:#501313;--red-tx:#F7C1C1;
+    --amber:#FAC775;--amber-bg:#412402;--amber-tx:#EF9F27;
+    --pink:#ED93B1;--pink-bg:#4B1528;--pink-tx:#F4C0D1;
+    --g50:#2C2C2A;--g100:#444441;--g200:#5F5E5A;
+  }
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden}
+body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',sans-serif;color:var(--tx);background:var(--bg);display:flex;flex-direction:column;padding-top:var(--sat)}
+
+.hdr{padding:16px 20px 12px;background:var(--bg);border-bottom:0.5px solid var(--bdr);flex-shrink:0}
+.hdr h1{font-size:20px;font-weight:600;letter-spacing:-0.3px}
+.hdr p{font-size:12px;color:var(--tx3);margin-top:2px}
+.main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 16px 110px}
+
+.tbar{position:fixed;bottom:0;left:0;right:0;display:flex;background:var(--bg);border-top:0.5px solid var(--bdr);padding:6px 0 calc(6px + var(--sab));z-index:50}
+.tbtn{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;cursor:pointer;padding:6px 4px;font-size:10px;color:var(--tx3)}
+.tbtn.act{color:var(--teal)}
+.tbtn svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tbtn.act svg{stroke-width:2.2}
+
+.mnav{display:flex;align-items:center;justify-content:space-between;padding:16px 4px 12px}
+.mnav button{background:none;border:0.5px solid var(--bdr);border-radius:var(--r);width:36px;height:36px;cursor:pointer;font-size:18px;color:var(--tx);display:flex;align-items:center;justify-content:center}
+.mnav button:active{background:var(--bg2);transform:scale(.96)}
+.mlbl{font-size:16px;font-weight:600}
+
+.leg{display:flex;gap:8px;justify-content:center;padding-bottom:12px;font-size:10px;color:var(--tx2);flex-wrap:wrap}
+.leg span{display:flex;align-items:center;gap:4px}
+.leg .pp{width:7px;height:7px;border-radius:50%}
+
+.cgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.ch{font-size:11px;font-weight:600;color:var(--tx3);text-align:center;padding:6px 0}
+.cd{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:var(--r);cursor:pointer;font-size:13px;position:relative;border:1.5px solid transparent;transition:all .12s}
+.cd:active{transform:scale(.92)}
+.cd.today{border-color:var(--teal)}
+.cd.sel{background:var(--teal-bg);border-color:var(--teal)}
+.cd.hd .dn{font-weight:700}
+.cd.em{cursor:default;pointer-events:none}
+.cd.tOFF{background:var(--g50)}.cd.tOFF .dn{color:var(--tx3);text-decoration:line-through}
+.cd.tLV{background:var(--amber-bg)}.cd.tSW{background:var(--pink-bg)}
+.cd.haslog::after{content:"";position:absolute;top:4px;right:4px;width:5px;height:5px;border-radius:50%;background:var(--teal)}
+.dots{display:flex;gap:2px;position:absolute;bottom:4px}
+.dt{width:5px;height:5px;border-radius:50%}
+
+/* Modal */
+.ov{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.45);z-index:200;align-items:flex-end;justify-content:center}
+.ov.open{display:flex}
+.mdl{background:var(--bg);border-radius:16px 16px 0 0;width:100%;max-width:500px;max-height:85vh;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:20px 20px calc(20px + var(--sab));animation:su .25s ease}
+@keyframes su{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.mh{width:36px;height:4px;border-radius:2px;background:var(--g200);margin:0 auto 16px}
+.mt{font-size:17px;font-weight:600;margin-bottom:4px}
+.ms{font-size:13px;color:var(--tx3);margin-bottom:16px}
+.msl{font-size:11px;font-weight:600;color:var(--tx3);text-transform:uppercase;letter-spacing:0.5px;margin:16px 0 8px}
+.msl:first-of-type{margin-top:0}
+
+.mo{display:flex;align-items:center;gap:12px;padding:14px;border:1.5px solid var(--bdr);border-radius:var(--r);margin-bottom:8px;cursor:pointer;transition:all .12s}
+.mo:active{transform:scale(.98)}
+.mo.on-AM,.mo.on-PM,.mo.on-NT{border-color:var(--teal);background:var(--teal-bg)}
+.mo.on-OFF{border-color:var(--g400);background:var(--g50)}
+.mo.on-LV{border-color:var(--amber);background:var(--amber-bg)}
+.mo.on-SW{border-color:var(--pink);background:var(--pink-bg)}
+.mo.lk{opacity:0.3;pointer-events:none}
+.mp{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+.mpsq{width:12px;height:12px;border-radius:3px;flex-shrink:0}
+.mi{flex:1}.mn{font-size:14px;font-weight:500}.mtm{font-size:12px;color:var(--tx2);margin-top:1px}
+.mc{width:22px;height:22px;border-radius:50%;border:2px solid var(--bdr);display:flex;align-items:center;justify-content:center;font-size:13px;color:transparent;flex-shrink:0;transition:all .12s}
+.mo.on-AM .mc,.mo.on-PM .mc,.mo.on-NT .mc{border-color:var(--teal);background:var(--teal);color:#fff}
+.mo.on-OFF .mc{border-color:var(--g400);background:var(--g400);color:#fff}
+.mo.on-LV .mc{border-color:var(--amber);background:var(--amber);color:#fff}
+.mo.on-SW .mc{border-color:var(--pink);background:var(--pink);color:#fff}
+
+.mbtns{display:flex;gap:10px;margin-top:16px}
+.mb-clr{flex:1;padding:14px;border:1px dashed var(--bdr);border-radius:var(--r);background:none;color:var(--red);font-size:14px;font-weight:500;cursor:pointer}
+.mb-clr:active{background:var(--red-bg)}
+.mb-done{flex:1;padding:14px;border:none;border-radius:var(--r);background:var(--teal);color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+.mb-done:active{transform:scale(.98);opacity:.9}
+
+/* Time log in modal */
+.log-section{margin-top:8px;border-top:0.5px solid var(--bdr);padding-top:12px}
+.log-entry{display:flex;align-items:center;gap:8px;padding:10px 12px;border:0.5px solid var(--bdr);border-radius:var(--r);margin-bottom:6px;font-size:13px}
+.log-entry .lbdg{padding:3px 8px;border-radius:12px;font-size:10px;font-weight:600;white-space:nowrap}
+.log-entry .ltimes{flex:1;color:var(--tx2);font-variant-numeric:tabular-nums}
+.log-entry .lhrs{font-size:11px;font-weight:600;color:var(--tx2)}
+.log-entry .ledit{background:none;border:none;color:var(--blue);cursor:pointer;font-size:12px;font-weight:500;padding:4px 8px}
+.log-entry .ledit:active{opacity:.7}
+.log-entry .ldel{background:none;border:none;color:var(--red);cursor:pointer;font-size:16px;padding:2px 6px;border-radius:4px}
+.log-entry .ldel:active{background:var(--red-bg)}
+.add-log-btn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:12px;border:1.5px dashed var(--bdr);border-radius:var(--r);background:none;color:var(--teal);font-size:13px;font-weight:500;cursor:pointer;margin-top:4px}
+.add-log-btn:active{background:var(--teal-bg)}
+.add-log-btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
+
+/* Log edit form */
+.sw-back{display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:16px;font-size:14px;font-weight:500}
+.sw-back:active{opacity:.7}
+.sw-back svg{width:18px;height:18px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.back-pink{color:var(--pink)}.back-pink svg{stroke:var(--pink)}
+.back-blue{color:var(--blue)}.back-blue svg{stroke:var(--blue)}
+.flbl{font-size:12px;font-weight:600;color:var(--tx2);margin-bottom:6px;display:block}
+.finp{width:100%;padding:12px 14px;border:1.5px solid var(--bdr);border-radius:var(--r);font-size:14px;background:var(--bg);color:var(--tx);margin-bottom:16px;font-family:inherit;outline:none;-webkit-appearance:none;appearance:none}
+.finp:focus{border-color:var(--teal)}
+.finp::placeholder{color:var(--tx3)}
+textarea.finp{min-height:80px;resize:vertical}
+.frow{display:flex;gap:10px;margin-bottom:16px}
+.frow .finp{margin-bottom:0;flex:1}
+.shift-pills{display:flex;gap:8px;margin-bottom:16px}
+.spill{flex:1;padding:12px 8px;border:1.5px solid var(--bdr);border-radius:var(--r);text-align:center;cursor:pointer;font-size:13px;font-weight:500;transition:all .12s;background:var(--bg)}
+.spill:active{transform:scale(.97)}
+.spill.s-AM{border-color:var(--teal);background:var(--teal-bg);color:var(--teal-tx)}
+.spill.s-PM{border-color:var(--blue);background:var(--blue-bg);color:var(--blue-tx)}
+.spill.s-NT{border-color:var(--purp);background:var(--purp-bg);color:var(--purp-tx)}
+.sw-info{background:var(--pink-bg);border-radius:var(--r);padding:12px 14px;margin-bottom:16px;font-size:12px;color:var(--pink-tx)}
+.log-form-info{background:var(--blue-bg);border-radius:var(--r);padding:12px 14px;margin-bottom:16px;font-size:12px;color:var(--blue-tx)}
+
+/* Clock */
+.ccard{background:var(--bg);border:0.5px solid var(--bdr);border-radius:var(--rl);padding:32px 20px 28px;text-align:center;margin:16px 0}
+.ctime{font-size:48px;font-weight:300;letter-spacing:-2px;font-variant-numeric:tabular-nums;margin-bottom:4px}
+.cdate{font-size:13px;color:var(--tx2);margin-bottom:24px}
+.cscheds{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:20px}
+.cstat{display:inline-block;padding:5px 16px;border-radius:20px;font-size:12px;font-weight:600;margin-bottom:24px;letter-spacing:0.3px}
+.s-out{background:var(--g50);color:var(--tx3)}
+.s-in{background:var(--teal-bg);color:var(--teal-tx)}
+.s-lv{background:var(--amber-bg);color:var(--amber-tx)}
+.cbtn{width:130px;height:130px;border-radius:50%;border:none;font-size:16px;font-weight:600;cursor:pointer;transition:all .15s}
+.cbtn:active{transform:scale(.92)}
+.cb-in{background:var(--teal);color:#fff;box-shadow:0 4px 20px rgba(29,158,117,0.3)}
+.cb-out{background:var(--red);color:#fff;box-shadow:0 4px 20px rgba(226,75,74,0.25)}
+.cb-dis{background:var(--g200);color:var(--tx3);cursor:not-allowed;box-shadow:none}
+.cb-dis:active{transform:none}
+.csince{margin-top:16px;font-size:12px;color:var(--tx3)}
+.tlhdr{font-size:13px;font-weight:600;color:var(--tx2);margin:20px 0 10px;padding:0 4px}
+.li{display:flex;align-items:center;gap:10px;padding:12px 14px;border:0.5px solid var(--bdr);border-radius:var(--r);margin-bottom:6px}
+.lbdg2{padding:3px 10px;border-radius:14px;font-size:11px;font-weight:600;white-space:nowrap}
+.ltm2{flex:1;font-size:13px;color:var(--tx2);font-variant-numeric:tabular-nums}
+.lhr2{font-size:12px;font-weight:600;color:var(--tx2)}
+.ldel2{background:none;border:none;color:var(--red);cursor:pointer;font-size:18px;padding:2px 6px;border-radius:6px}
+.ldel2:active{background:var(--red-bg)}
+.empty{text-align:center;padding:40px 16px;color:var(--tx3);font-size:13px}
+.dom{text-align:center;padding:20px;color:var(--tx3);font-size:14px;margin:10px 0;border:1px dashed var(--bdr);border-radius:var(--r)}
+
+/* Report */
+.srow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0 20px}
+.sc{background:var(--bg2);border-radius:var(--r);padding:14px 16px}
+.scl{font-size:12px;color:var(--tx3);margin-bottom:4px}
+.scv{font-size:26px;font-weight:600;letter-spacing:-0.5px}
+.rd{padding:12px 0;border-bottom:0.5px solid var(--bdr)}
+.rdr{display:flex;align-items:center;gap:8px}
+.rdc{width:58px;flex-shrink:0}
+.rdn{font-size:15px;font-weight:600}
+.rdd{font-size:11px;color:var(--tx3)}
+.rbs{display:flex;gap:4px;flex-wrap:wrap;flex:1}
+.rb{padding:2px 9px;border-radius:12px;font-size:11px;font-weight:600}
+.rh{font-size:13px;font-weight:600;color:var(--tx2);margin-left:auto;white-space:nowrap}
+.rlogs{padding:6px 0 0 66px}
+.rll{font-size:12px;color:var(--tx2);padding:2px 0;font-variant-numeric:tabular-nums}
+.rswap{font-size:11px;color:var(--pink-tx);background:var(--pink-bg);padding:4px 10px;border-radius:6px;margin:4px 0 0 66px;display:inline-block}
+.xbtn{width:100%;padding:16px;background:var(--teal);color:#fff;border:none;border-radius:var(--r);font-size:15px;font-weight:600;cursor:pointer;margin:24px 0 16px}
+.xbtn:active{transform:scale(.98);opacity:.9}
+</style>
+</head>
+<body>
+
+<div class="hdr"><h1>ShiftLog</h1><p>Camarines Norte Provincial Hospital</p></div>
+<div class="main" id="main"></div>
+<div class="tbar" id="tabs"></div>
+<div class="ov" id="ov" onclick="closeBg(event)"><div class="mdl" id="mdl"></div></div>
+
+<script>
+var SHIFTS=[
+  {id:"AM",name:"Morning",label:"6:00 AM – 2:00 PM",short:"6A–2P",hex:"#1D9E75",color:"var(--teal)",bg:"var(--teal-bg)",tx:"var(--teal-tx)"},
+  {id:"PM",name:"Afternoon",label:"2:00 PM – 10:00 PM",short:"2P–10P",hex:"#378ADD",color:"var(--blue)",bg:"var(--blue-bg)",tx:"var(--blue-tx)"},
+  {id:"NT",name:"Night",label:"10:00 PM – 6:00 AM",short:"10P–6A",hex:"#534AB7",color:"var(--purp)",bg:"var(--purp-bg)",tx:"var(--purp-tx)"}
+];
+var TAGS=[
+  {id:"OFF",name:"Day off",short:"Day off",hex:"#888780",color:"var(--g400)",bg:"var(--g50)",tx:"var(--g600)"},
+  {id:"LV",name:"On-leave",short:"On-leave",hex:"#EF9F27",color:"var(--amber)",bg:"var(--amber-bg)",tx:"var(--amber-tx)"},
+  {id:"SW",name:"Shift swap",short:"Shift swap",hex:"#D4537E",color:"var(--pink)",bg:"var(--pink-bg)",tx:"var(--pink-tx)"}
+];
+var ALL=SHIFTS.concat(TAGS);
+var DAYS=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+var MO=["January","February","March","April","May","June","July","August","September","October","November","December"];
+var ORDER=["AM","PM","NT","OFF","LV","SW"];
+
+function gi(id){for(var i=0;i<ALL.length;i++){if(ALL[i].id===id)return ALL[i];}return null;}
+function isT(id){return id==="OFF"||id==="LV"||id==="SW";}
+function isS(id){return id==="AM"||id==="PM"||id==="NT";}
+function fd(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+function pd(s){var p=s.split("-");return new Date(+p[0],+p[1]-1,+p[2]);}
+function ft(iso){if(!iso)return"--:--";return new Date(iso).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit",hour12:true});}
+function dim(y,m){return new Date(y,m+1,0).getDate();}
+function fdom(y,m){return new Date(y,m,1).getDay();}
+function dsh(iso){var h=new Date(iso).getHours();if(h>=5&&h<10)return"AM";if(h>=10&&h<18)return"PM";return"NT";}
+function srt(a){return a.slice().sort(function(x,y){return ORDER.indexOf(x)-ORDER.indexOf(y);});}
+
+var K="cnph-v8";
+var S={tab:"schedule",vy:new Date().getFullYear(),vm:new Date().getMonth(),sel:fd(new Date()),scheds:{},logs:{},cin:null,swaps:{}};
+var modalDate="";
+var swapDraft={nurse:"",date:"",shift:"",notes:""};
+var logDraft={login:"",logout:"",shift:"",editIdx:-1};
+
+function save(){try{localStorage.setItem(K,JSON.stringify({s:S.scheds,l:S.logs,c:S.cin,sw:S.swaps}));}catch(e){}}
+function load(){try{var r=localStorage.getItem(K);if(r){var d=JSON.parse(r);S.scheds=d.s||{};S.logs=d.l||{};S.cin=d.c||null;S.swaps=d.sw||{};}}catch(e){}}
+
+function gdd(date){
+  var raw=S.scheds[date]||[];
+  var sh=[],tg=[];
+  for(var i=0;i<raw.length;i++){if(isS(raw[i]))sh.push(raw[i]);else if(isT(raw[i]))tg.push(raw[i]);}
+  return{shifts:sh,tags:tg,all:raw};
+}
+
+function stab(t){S.tab=t;render();}
+function pm(){S.vm--;if(S.vm<0){S.vm=11;S.vy--;}render();}
+function nm(){S.vm++;if(S.vm>11){S.vm=0;S.vy++;}render();}
+function selDay(d){S.sel=d;modalDate=d;render();openMain(d);}
+
+function toggleItem(date,itemId){
+  if(itemId==="SW"){openSwapForm(date);return;}
+  var cur=(S.scheds[date]||[]).slice();
+  if(isT(itemId)){
+    var has=cur.indexOf(itemId)>=0;
+    if(has){cur.splice(cur.indexOf(itemId),1);}
+    else{if(itemId==="OFF"){cur=["OFF"];delete S.swaps[date];}else{cur=cur.filter(function(id){return id!=="OFF";});cur.push(itemId);}}
+  }else{
+    if(cur.indexOf("OFF")>=0)return;
+    var idx=cur.indexOf(itemId);if(idx>=0)cur.splice(idx,1);else cur.push(itemId);
+  }
+  cur=srt(cur);
+  if(cur.length===0)delete S.scheds[date];else S.scheds[date]=cur;
+  save();renderMainModal(date);render();
+}
+
+function clearDay(date){delete S.scheds[date];delete S.swaps[date];save();closeM();render();}
+function removeSwap(date){
+  var cur=(S.scheds[date]||[]).slice();var idx=cur.indexOf("SW");if(idx>=0)cur.splice(idx,1);
+  if(cur.length===0)delete S.scheds[date];else S.scheds[date]=cur;
+  delete S.swaps[date];save();renderMainModal(date);render();
+}
+
+/* MODAL */
+function openM(){document.getElementById("ov").className="ov open";}
+function closeM(){document.getElementById("ov").className="ov";}
+function closeBg(e){if(e.target===document.getElementById("ov"))closeM();}
+
+function openMain(date){modalDate=date;openM();renderMainModal(date);}
+
+function renderMainModal(date){
+  var dd=gdd(date);var dobj=pd(date);
+  var hasDO=dd.tags.indexOf("OFF")>=0;
+  var hasSW=dd.tags.indexOf("SW")>=0;
+  var swap=S.swaps[date];
+  var logs=S.logs[date]||[];
+
+  var h='<div class="mh"></div>';
+  h+='<div class="mt">'+dobj.toLocaleDateString([],{weekday:"long",month:"long",day:"numeric"})+'</div>';
+  h+='<div class="ms">'+(hasDO?"Marked as day off — clear to assign shifts":"Tap to assign shifts (multiple = double shift)")+'</div>';
+
+  h+='<div class="msl">Shifts</div>';
+  for(var i=0;i<SHIFTS.length;i++){
+    var s=SHIFTS[i],on=dd.shifts.indexOf(s.id)>=0;
+    h+='<div class="mo'+(on?" on-"+s.id:"")+(hasDO?" lk":"")+'" onclick="toggleItem(\''+date+"','"+s.id+"')\">";
+    h+='<span class="mp" style="background:'+s.color+'"></span>';
+    h+='<div class="mi"><div class="mn">'+s.name+'</div><div class="mtm">'+s.label+'</div></div>';
+    h+='<span class="mc">'+(on?"&#10003;":"")+'</span></div>';
+  }
+
+  h+='<div class="msl">Status</div>';
+  for(var i=0;i<TAGS.length;i++){
+    var t=TAGS[i],on=dd.tags.indexOf(t.id)>=0;
+    if(t.id==="SW"&&hasDO)continue;
+    h+='<div class="mo'+(on?" on-"+t.id:"")+'" onclick="toggleItem(\''+date+"','"+t.id+"')\">";
+    h+='<span class="mpsq" style="background:'+t.color+'"></span>';
+    h+='<div class="mi"><div class="mn">'+t.name+'</div></div>';
+    h+='<span class="mc">'+(on?"&#10003;":"")+'</span></div>';
+  }
+
+  if(hasSW&&swap){
+    var swSh=gi(swap.shift);
+    h+='<div class="sw-info"><strong>Swap details:</strong><br>With: '+swap.nurse+'<br>New schedule: '+swap.date+(swSh?" ("+swSh.short+")":"")+'<br>';
+    if(swap.notes)h+='Notes: '+swap.notes;
+    h+='</div>';
+    h+='<div style="display:flex;gap:8px;margin-bottom:8px">';
+    h+='<button style="flex:1;padding:10px;border:1.5px solid var(--pink);border-radius:var(--r);background:none;color:var(--pink);font-size:13px;font-weight:500;cursor:pointer" onclick="openSwapForm(\''+date+'\')">Edit swap</button>';
+    h+='<button style="flex:1;padding:10px;border:1px dashed var(--bdr);border-radius:var(--r);background:none;color:var(--red);font-size:13px;font-weight:500;cursor:pointer" onclick="removeSwap(\''+date+'\')">Remove swap</button>';
+    h+='</div>';
+  }
+
+  /* TIME LOG SECTION */
+  h+='<div class="log-section">';
+  h+='<div class="msl">Time log</div>';
+  if(logs.length>0){
+    for(var i=0;i<logs.length;i++){
+      var l=logs[i],s=gi(l.sh),iT=new Date(l.lt),oT=l.lo?new Date(l.lo):null;
+      var hrs=oT?((oT-iT)/3600000).toFixed(1)+"h":"";
+      h+='<div class="log-entry">';
+      h+='<span class="lbdg" style="background:'+(s?s.bg:"var(--g50)")+";color:"+(s?s.tx:"var(--tx2)")+'">'+(s?s.short:"--")+'</span>';
+      h+='<span class="ltimes">'+ft(l.lt)+" → "+(l.lo?ft(l.lo):"...")+'</span>';
+      if(hrs)h+='<span class="lhrs">'+hrs+'</span>';
+      h+='<button class="ledit" onclick="openLogForm(\''+date+'\','+i+')">Edit</button>';
+      h+='<button class="ldel" onclick="delLogModal(\''+date+'\','+i+')">&times;</button>';
+      h+='</div>';
+    }
+  }else{
+    h+='<div style="font-size:12px;color:var(--tx3);padding:8px 0">No time entries for this day.</div>';
+  }
+  h+='<button class="add-log-btn" onclick="openLogForm(\''+date+'\',-1)"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add time entry</button>';
+  h+='</div>';
+
+  h+='<div class="mbtns">';
+  if(dd.all.length>0)h+='<button class="mb-clr" onclick="clearDay(\''+date+'\')">Clear day</button>';
+  h+='<button class="mb-done" onclick="closeM()">Done</button>';
+  h+='</div>';
+
+  document.getElementById("mdl").innerHTML=h;
+}
+
+function delLogModal(date,idx){
+  var l=S.logs[date];if(!l)return;l.splice(idx,1);
+  if(l.length===0)delete S.logs[date];
+  save();renderMainModal(date);render();
+}
+
+/* LOG ADD/EDIT FORM */
+function openLogForm(date,idx){
+  modalDate=date;
+  logDraft.editIdx=idx;
+  if(idx>=0){
+    var l=S.logs[date][idx];
+    var iT=new Date(l.lt);
+    var oT=l.lo?new Date(l.lo):null;
+    logDraft.login=String(iT.getHours()).padStart(2,"0")+":"+String(iT.getMinutes()).padStart(2,"0");
+    logDraft.logout=oT?(String(oT.getHours()).padStart(2,"0")+":"+String(oT.getMinutes()).padStart(2,"0")):"";
+    logDraft.shift=l.sh||"";
+  }else{
+    logDraft.login="";
+    logDraft.logout="";
+    logDraft.shift="";
+  }
+  renderLogForm(date);
+}
+
+function renderLogForm(date){
+  var dobj=pd(date);
+  var isEdit=logDraft.editIdx>=0;
+
+  var h='<div class="mh"></div>';
+  h+='<div class="sw-back back-blue" onclick="openMain(\''+date+'\')">';
+  h+='<svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Back</div>';
+  h+='<div class="mt">'+(isEdit?"Edit time entry":"Add time entry")+'</div>';
+  h+='<div class="ms">'+dobj.toLocaleDateString([],{weekday:"long",month:"long",day:"numeric"})+'</div>';
+
+  if(!isEdit){
+    h+='<div class="log-form-info">Use this to manually log a shift you forgot to punch in or out for.</div>';
+  }
+
+  h+='<label class="flbl">Login time</label>';
+  h+='<input class="finp" type="time" id="log-in" value="'+logDraft.login+'" oninput="logDraft.login=this.value">';
+
+  h+='<label class="flbl">Logout time</label>';
+  h+='<input class="finp" type="time" id="log-out" value="'+logDraft.logout+'" oninput="logDraft.logout=this.value">';
+
+  h+='<label class="flbl">Shift</label>';
+  h+='<div class="shift-pills">';
+  for(var i=0;i<SHIFTS.length;i++){
+    var s=SHIFTS[i],sel=logDraft.shift===s.id;
+    h+='<div class="spill'+(sel?" s-"+s.id:"")+'" onclick="pickLogShift(\''+s.id+'\',\''+date+'\')">'+s.short+'</div>';
+  }
+  h+='</div>';
+
+  h+='<div class="mbtns">';
+  h+='<button class="mb-clr" onclick="openMain(\''+date+'\')">Cancel</button>';
+  h+='<button class="mb-done" onclick="saveLog(\''+date+'\')">'+(isEdit?"Save changes":"Add entry")+'</button>';
+  h+='</div>';
+
+  document.getElementById("mdl").innerHTML=h;
+}
+
+function pickLogShift(shiftId,date){
+  logDraft.shift=shiftId;
+  renderLogForm(date);
+}
+
+function saveLog(date){
+  var loginVal=document.getElementById("log-in").value;
+  var logoutVal=document.getElementById("log-out").value;
+
+  if(!loginVal){alert("Please enter a login time.");return;}
+
+  var dp=date.split("-");
+  var yr=+dp[0],mo=+dp[1]-1,dy=+dp[2];
+  var lp=loginVal.split(":");
+  var loginDt=new Date(yr,mo,dy,+lp[0],+lp[1]);
+  var logoutDt=null;
+  if(logoutVal){
+    var op=logoutVal.split(":");
+    logoutDt=new Date(yr,mo,dy,+op[0],+op[1]);
+    if(logoutDt<=loginDt){
+      logoutDt=new Date(yr,mo,dy+1,+op[0],+op[1]);
+    }
+  }
+
+  var shift=logDraft.shift;
+  if(!shift){
+    var h=loginDt.getHours();
+    if(h>=5&&h<10)shift="AM";else if(h>=10&&h<18)shift="PM";else shift="NT";
+  }
+
+  var entry={lt:loginDt.toISOString(),lo:logoutDt?logoutDt.toISOString():null,sh:shift};
+
+  if(!S.logs[date])S.logs[date]=[];
+
+  if(logDraft.editIdx>=0){
+    S.logs[date][logDraft.editIdx]=entry;
+  }else{
+    S.logs[date].push(entry);
+  }
+
+  S.logs[date].sort(function(a,b){return new Date(a.lt)-new Date(b.lt);});
+
+  save();
+  openMain(date);
+  render();
+}
+
+/* SWAP FORM */
+function openSwapForm(date){
+  modalDate=date;
+  var existing=S.swaps[date];
+  if(existing){swapDraft={nurse:existing.nurse||"",date:existing.date||"",shift:existing.shift||"",notes:existing.notes||""};}
+  else{swapDraft={nurse:"",date:"",shift:"",notes:""};}
+  openM();renderSwapForm(date);
+}
+
+function renderSwapForm(date){
+  var dobj=pd(date);
+  var h='<div class="mh"></div>';
+  h+='<div class="sw-back back-pink" onclick="openMain(\''+date+'\')">';
+  h+='<svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Back</div>';
+  h+='<div class="mt">Shift swap details</div>';
+  h+='<div class="ms">'+dobj.toLocaleDateString([],{weekday:"long",month:"long",day:"numeric"})+'</div>';
+
+  h+='<label class="flbl">Swap schedule with</label>';
+  h+='<input class="finp" type="text" id="sw-nurse" placeholder="Name of nurse" value="'+esc(swapDraft.nurse)+'" oninput="swapDraft.nurse=this.value">';
+  h+='<label class="flbl">New schedule date</label>';
+  h+='<input class="finp" type="date" id="sw-date" value="'+swapDraft.date+'" oninput="swapDraft.date=this.value">';
+  h+='<label class="flbl">New schedule shift</label>';
+  h+='<div class="shift-pills">';
+  for(var i=0;i<SHIFTS.length;i++){var s=SHIFTS[i],sel=swapDraft.shift===s.id;h+='<div class="spill'+(sel?" s-"+s.id:"")+'" onclick="pickSwapShift(\''+s.id+'\',\''+date+'\')">'+s.short+'</div>';}
+  h+='</div>';
+  h+='<label class="flbl">Notes</label>';
+  h+='<textarea class="finp" id="sw-notes" placeholder="Optional notes" oninput="swapDraft.notes=this.value">'+esc(swapDraft.notes)+'</textarea>';
+  h+='<div class="mbtns"><button class="mb-clr" onclick="openMain(\''+date+'\')">Cancel</button>';
+  h+='<button class="mb-done" onclick="saveSwap(\''+date+'\')">Save swap</button></div>';
+  document.getElementById("mdl").innerHTML=h;
+}
+
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function pickSwapShift(shiftId,date){swapDraft.shift=shiftId;renderSwapForm(date);}
+
+function saveSwap(date){
+  swapDraft.nurse=document.getElementById("sw-nurse").value;
+  swapDraft.date=document.getElementById("sw-date").value;
+  swapDraft.notes=document.getElementById("sw-notes").value;
+  if(!swapDraft.nurse.trim()){alert("Please enter the nurse name.");return;}
+  S.swaps[date]={nurse:swapDraft.nurse,date:swapDraft.date,shift:swapDraft.shift,notes:swapDraft.notes};
+  var cur=(S.scheds[date]||[]).slice();
+  if(cur.indexOf("SW")<0){cur.push("SW");cur=srt(cur);}
+  cur=cur.filter(function(id){return id!=="OFF";});
+  S.scheds[date]=cur;
+  save();openMain(date);render();
+}
+
+/* CLOCK */
+function clockIn(){S.cin={lt:new Date().toISOString()};save();render();}
+function clockOut(){
+  if(!S.cin)return;var t=new Date().toISOString();var day=fd(new Date(S.cin.lt));
+  var entry={lt:S.cin.lt,lo:t,sh:dsh(S.cin.lt)};
+  if(!S.logs[day])S.logs[day]=[];S.logs[day].push(entry);S.cin=null;save();render();
+}
+function delLog(date,idx){var l=S.logs[date];if(!l)return;l.splice(idx,1);if(l.length===0)delete S.logs[date];save();render();}
+
+/* EXPORT */
+function exportXL(){
+  if(typeof XLSX==="undefined"){alert("Excel library is still loading.");return;}
+  var y=S.vy,m=S.vm,tot=dim(y,m),rows=[];
+  for(var d=1;d<=tot;d++){
+    var ds2=y+"-"+String(m+1).padStart(2,"0")+"-"+String(d).padStart(2,"0");
+    var dt=pd(ds2),dn=DAYS[dt.getDay()],dd=gdd(ds2);
+    var parts=[];for(var j=0;j<dd.all.length;j++){var it=gi(dd.all[j]);if(it)parts.push(it.short);}
+    var schStr=parts.join(", ");
+    var tp=[];for(var j=0;j<dd.tags.length;j++){var it=gi(dd.tags[j]);if(it)tp.push(it.short);}
+    var stStr=tp.join(", ");
+    var swap=S.swaps[ds2];var swStr="";
+    if(swap){var swSh=gi(swap.shift);swStr="Swap with: "+swap.nurse;if(swap.date)swStr+=", New: "+swap.date;if(swSh)swStr+=" ("+swSh.short+")";if(swap.notes)swStr+=", "+swap.notes;}
+    var logs=S.logs[ds2]||[];
+    if(logs.length===0){rows.push({Date:ds2,Day:dn,Schedule:schStr,Login:"",Logout:"",Hours:"",Status:stStr,"Swap Details":swStr});}
+    else{for(var li=0;li<logs.length;li++){
+      var l=logs[li],iT=new Date(l.lt),oT=l.lo?new Date(l.lo):null;
+      var hrs=oT?((oT-iT)/3600000).toFixed(2):"";
+      rows.push({Date:li===0?ds2:"",Day:li===0?dn:"",Schedule:li===0?schStr:"",
+        Login:iT.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit",hour12:true}),
+        Logout:oT?oT.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit",hour12:true}):"(active)",
+        Hours:hrs,Status:li===0?stStr:"","Swap Details":li===0?swStr:""});
+    }}
+  }
+  var th=0;for(var i=0;i<rows.length;i++)th+=(parseFloat(rows[i].Hours)||0);
+  rows.push({Date:"",Day:"",Schedule:"",Login:"",Logout:"TOTAL HOURS",Hours:th.toFixed(2),Status:"","Swap Details":""});
+  var ws=XLSX.utils.json_to_sheet(rows);
+  ws["!cols"]=[{wch:12},{wch:6},{wch:24},{wch:12},{wch:12},{wch:10},{wch:14},{wch:40}];
+  var wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,MO[m]+" "+y);
+  XLSX.writeFile(wb,"Shift_Report_"+MO[m]+"_"+y+".xlsx");
+}
+
+/* RENDERERS */
+function renderTabs(){
+  var ic={schedule:'<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',clock:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',report:'<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>'};
+  var lb={schedule:"Schedule",clock:"Time clock",report:"Report"};
+  var ids=["schedule","clock","report"],h="";
+  for(var i=0;i<ids.length;i++){var id=ids[i];h+='<button class="tbtn'+(S.tab===id?" act":"")+'" onclick="stab(\''+id+'\')">'+ic[id]+"<span>"+lb[id]+"</span></button>";}
+  document.getElementById("tabs").innerHTML=h;
+}
+
+function renderSchedule(){
+  var y=S.vy,m=S.vm,tot=dim(y,m),first=fdom(y,m),today=fd(new Date()),sel=S.sel;
+  var h='<div class="mnav"><button onclick="pm()">&#8249;</button><span class="mlbl">'+MO[m]+" "+y+'</span><button onclick="nm()">&#8250;</button></div>';
+  h+='<div class="leg">';
+  for(var i=0;i<SHIFTS.length;i++)h+='<span><span class="pp" style="background:'+SHIFTS[i].hex+'"></span>'+SHIFTS[i].short+'</span>';
+  for(var i=0;i<TAGS.length;i++)h+='<span><span class="pp" style="background:'+TAGS[i].hex+'"></span>'+TAGS[i].short+'</span>';
+  h+='</div><div class="cgrid">';
+  for(var i=0;i<DAYS.length;i++)h+='<div class="ch">'+DAYS[i]+'</div>';
+  for(var i=0;i<first;i++)h+='<div class="cd em"></div>';
+  for(var d=1;d<=tot;d++){
+    var ds2=y+"-"+String(m+1).padStart(2,"0")+"-"+String(d).padStart(2,"0");
+    var isToday=ds2===today,isSel=ds2===sel,dd=gdd(ds2),hasData=dd.all.length>0;
+    var hasLog=!!(S.logs[ds2]&&S.logs[ds2].length>0);
+    var tc="";
+    if(dd.tags.indexOf("OFF")>=0)tc=" tOFF";else if(dd.tags.indexOf("LV")>=0)tc=" tLV";else if(dd.tags.indexOf("SW")>=0)tc=" tSW";
+    var dotItems=dd.shifts.length>0?dd.shifts:dd.tags;
+    var dots="";
+    if(dotItems.length>0){dots='<div class="dots">';for(var j=0;j<dotItems.length;j++){var it=gi(dotItems[j]);if(it)dots+='<span class="dt" style="background:'+it.hex+'"></span>';}dots+='</div>';}
+    h+='<div class="cd'+(isToday?" today":"")+(isSel?" sel":"")+(hasData?" hd":"")+tc+(hasLog?" haslog":"")+'" onclick="selDay(\''+ds2+'\')"><span class="dn">'+d+'</span>'+dots+'</div>';
+  }
+  h+='</div>';return h;
+}
+
+function renderClock(){
+  var now=new Date(),today=fd(now),isIn=!!S.cin,dd=gdd(today),tl=S.logs[today]||[];
+  var isDO=dd.tags.indexOf("OFF")>=0,isLV=dd.tags.indexOf("LV")>=0;
+  var h='<div class="ccard"><div class="ctime" id="lc">'+now.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:true})+'</div>';
+  h+='<div class="cdate">'+now.toLocaleDateString([],{weekday:"long",month:"long",day:"numeric",year:"numeric"})+'</div>';
+  if(dd.all.length>0){h+='<div class="cscheds">';for(var i=0;i<dd.all.length;i++){var it=gi(dd.all[i]);if(it)h+='<span class="rb" style="background:'+it.bg+";color:"+it.tx+'">'+it.short+'</span>';}h+='</div>';}
+  if(isIn)h+='<div class="cstat s-in">CLOCKED IN</div>';else if(isDO)h+='<div class="cstat s-out">DAY OFF</div>';else if(isLV)h+='<div class="cstat s-lv">ON LEAVE</div>';else h+='<div class="cstat s-out">OFF DUTY</div>';
+  h+='<br>';
+  if(isIn)h+='<button class="cbtn cb-out" onclick="clockOut()">Clock out</button>';else if(isDO||isLV)h+='<button class="cbtn cb-dis" disabled>Clock in</button>';else h+='<button class="cbtn cb-in" onclick="clockIn()">Clock in</button>';
+  if(isIn)h+='<div class="csince">Since '+ft(S.cin.lt)+'</div>';
+  h+='</div><div class="tlhdr">Today\'s log</div>';
+  if(tl.length===0&&!isIn){
+    if(isDO)h+='<div class="dom">Enjoy your day off!</div>';else if(isLV)h+='<div class="dom">You are on leave today.</div>';else h+='<div class="empty">No time entries today.<br>Tap the button above to clock in.</div>';
+  }else{
+    for(var i=0;i<tl.length;i++){
+      var l=tl[i],s=gi(l.sh),iT=new Date(l.lt),oT=l.lo?new Date(l.lo):null;
+      var hrs=oT?((oT-iT)/3600000).toFixed(1)+"h":"";var ld=fd(new Date(l.lt));
+      h+='<div class="li"><span class="lbdg2" style="background:'+(s?s.bg:"var(--g50)")+";color:"+(s?s.tx:"var(--tx2)")+'">'+(s?s.short:"--")+'</span>';
+      h+='<span class="ltm2">'+ft(l.lt)+" → "+(l.lo?ft(l.lo):"...")+'</span>';
+      if(hrs)h+='<span class="lhr2">'+hrs+'</span>';
+      h+='<button class="ldel2" onclick="delLog(\''+ld+"',"+i+')">&times;</button></div>';
+    }
+  }
+  return h;
+}
+
+function renderReport(){
+  var y=S.vy,m=S.vm,tot=dim(y,m);
+  var th=0,dw=0,doff=0,dlv=0,entries=[];
+  for(var d=1;d<=tot;d++){
+    var ds2=y+"-"+String(m+1).padStart(2,"0")+"-"+String(d).padStart(2,"0");
+    var dt=pd(ds2),dd=gdd(ds2),logs=S.logs[ds2]||[],dh=0;
+    for(var i=0;i<logs.length;i++){if(logs[i].lo)dh+=(new Date(logs[i].lo)-new Date(logs[i].lt))/3600000;}
+    if(logs.length>0)dw++;if(dd.tags.indexOf("OFF")>=0)doff++;if(dd.tags.indexOf("LV")>=0)dlv++;
+    th+=dh;if(dd.all.length>0||logs.length>0)entries.push({ds:ds2,dt:dt,dd:dd,logs:logs,dh:dh});
+  }
+  var h='<div class="mnav"><button onclick="pm()">&#8249;</button><span class="mlbl">'+MO[m]+" "+y+'</span><button onclick="nm()">&#8250;</button></div>';
+  h+='<div class="srow"><div class="sc"><div class="scl">Total hours</div><div class="scv">'+th.toFixed(1)+'h</div></div><div class="sc"><div class="scl">Days worked</div><div class="scv">'+dw+'</div></div></div>';
+  h+='<div class="srow"><div class="sc"><div class="scl">Days off</div><div class="scv">'+doff+'</div></div><div class="sc"><div class="scl">On leave</div><div class="scv">'+dlv+'</div></div></div>';
+  if(entries.length===0){h+='<div class="empty">No data for this month yet.</div>';}
+  else{
+    for(var e=0;e<entries.length;e++){
+      var en=entries[e];
+      h+='<div class="rd"><div class="rdr"><div class="rdc"><div class="rdn">'+String(en.dt.getDate()).padStart(2,"0")+'</div><div class="rdd">'+DAYS[en.dt.getDay()]+'</div></div><div class="rbs">';
+      for(var b=0;b<en.dd.all.length;b++){var it=gi(en.dd.all[b]);if(it)h+='<span class="rb" style="background:'+it.bg+";color:"+it.tx+'">'+it.short+'</span>';}
+      h+='</div>';if(en.dh>0)h+='<span class="rh">'+en.dh.toFixed(1)+'h</span>';h+='</div>';
+      if(en.logs.length>0){h+='<div class="rlogs">';for(var li=0;li<en.logs.length;li++){var l=en.logs[li],s=gi(l.sh);h+='<div class="rll"><span style="color:'+(s?s.tx:"inherit")+'">'+(s?s.short:"--")+'</span>&nbsp;&nbsp;'+ft(l.lt)+" → "+(l.lo?ft(l.lo):"(active)")+'</div>';}h+='</div>';}
+      var swap=S.swaps[en.ds];
+      if(swap){var swSh=gi(swap.shift);h+='<div class="rswap">Swap with '+swap.nurse+(swap.date?" → "+swap.date:"")+(swSh?" ("+swSh.short+")":"")+'</div>';}
+      h+='</div>';
+    }
+  }
+  h+='<button class="xbtn" onclick="exportXL()">Export to Excel (.xlsx)</button>';return h;
+}
+
+function render(){
+  renderTabs();var m=document.getElementById("main");
+  if(S.tab==="schedule")m.innerHTML=renderSchedule();
+  else if(S.tab==="clock")m.innerHTML=renderClock();
+  else m.innerHTML=renderReport();
+}
+
+setInterval(function(){var e=document.getElementById("lc");if(e)e.textContent=new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:true});},1000);
+
+load();render();
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+</body>
+</html>
