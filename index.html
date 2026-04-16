@@ -272,9 +272,9 @@ textarea.ch-inp{min-height:70px;resize:vertical}
 
 <script>
 var SHIFTS=[
+  {id:"NT",name:"Night <em style=\"color:var(--purp);font-weight:500;font-size:12px\">(Previous Day Time-In)</em>",label:"10:00 PM – 6:00 AM",short:"10P–6A",hex:"#534AB7",color:"var(--purp)",bg:"var(--purp-bg)",tx:"var(--purp-tx)"},
   {id:"AM",name:"Morning",label:"6:00 AM – 2:00 PM",short:"6A–2P",hex:"#1D9E75",color:"var(--teal)",bg:"var(--teal-bg)",tx:"var(--teal-tx)"},
-  {id:"PM",name:"Afternoon",label:"2:00 PM – 10:00 PM",short:"2P–10P",hex:"#378ADD",color:"var(--blue)",bg:"var(--blue-bg)",tx:"var(--blue-tx)"},
-  {id:"NT",name:"Night",label:"10:00 PM – 6:00 AM",short:"10P–6A",hex:"#534AB7",color:"var(--purp)",bg:"var(--purp-bg)",tx:"var(--purp-tx)"}
+  {id:"PM",name:"Afternoon",label:"2:00 PM – 10:00 PM",short:"2P–10P",hex:"#378ADD",color:"var(--blue)",bg:"var(--blue-bg)",tx:"var(--blue-tx)"}
 ];
 var TAGS=[
   {id:"OFF",name:"Day off",short:"Day off",hex:"#888780",color:"var(--g400)",bg:"var(--g50)",tx:"var(--g600)"},
@@ -285,7 +285,7 @@ var TAGS=[
 var ALL=SHIFTS.concat(TAGS);
 var DAYS=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 var MO=["January","February","March","April","May","June","July","August","September","October","November","December"];
-var ORDER=["AM","PM","NT","OFF","LV","SL","WL"];
+var ORDER=["NT","AM","PM","OFF","LV","SL","WL"];
 
 function gi(id){for(var i=0;i<ALL.length;i++){if(ALL[i].id===id)return ALL[i];}return null;}
 function isT(id){return id==="OFF"||id==="LV"||id==="SL"||id==="WL";}
