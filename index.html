@@ -71,6 +71,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue'
 .cd.tOFF{background:var(--g50)}.cd.tOFF .dn{color:var(--tx3);text-decoration:line-through}
 .cd.tLV{background:var(--amber-bg)}
 .cd.tSL{background:var(--coral-bg)}
+.cd.tWL{background:var(--pink-bg)}
 .cd.haslog::after{content:"";position:absolute;top:4px;right:4px;width:5px;height:5px;border-radius:50%;background:var(--teal)}
 .dots{display:flex;gap:2px;position:absolute;bottom:4px}
 .dt{width:5px;height:5px;border-radius:50%}
@@ -92,6 +93,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue'
 .mo.on-OFF{border-color:var(--g400);background:var(--g50)}
 .mo.on-LV{border-color:var(--amber);background:var(--amber-bg)}
 .mo.on-SL{border-color:var(--coral);background:var(--coral-bg)}
+.mo.on-WL{border-color:var(--pink);background:var(--pink-bg)}
 .mo.lk{opacity:0.3;pointer-events:none}
 .mp{width:12px;height:12px;border-radius:50%;flex-shrink:0}
 .mpsq{width:12px;height:12px;border-radius:3px;flex-shrink:0}
@@ -101,6 +103,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue'
 .mo.on-OFF .mc{border-color:var(--g400);background:var(--g400);color:#fff}
 .mo.on-LV .mc{border-color:var(--amber);background:var(--amber);color:#fff}
 .mo.on-SL .mc{border-color:var(--coral);background:var(--coral);color:#fff}
+.mo.on-WL .mc{border-color:var(--pink);background:var(--pink);color:#fff}
 
 .mbtns{display:flex;gap:10px;margin-top:16px}
 .mb-clr{flex:1;padding:14px;border:1px dashed var(--bdr);border-radius:var(--r);background:none;color:var(--red);font-size:14px;font-weight:500;cursor:pointer}
@@ -152,6 +155,7 @@ textarea.finp{min-height:80px;resize:vertical}
 .s-in{background:var(--teal-bg);color:var(--teal-tx)}
 .s-lv{background:var(--amber-bg);color:var(--amber-tx)}
 .s-sl{background:var(--coral-bg);color:var(--coral-tx)}
+.s-wl{background:var(--pink-bg);color:var(--pink-tx)}
 .cbtn{width:130px;height:130px;border-radius:50%;border:none;font-size:16px;font-weight:600;cursor:pointer;transition:all .15s}
 .cbtn:active{transform:scale(.92)}
 .cb-in{background:var(--teal);color:#fff;box-shadow:0 4px 20px rgba(29,158,117,0.3)}
@@ -275,15 +279,16 @@ var SHIFTS=[
 var TAGS=[
   {id:"OFF",name:"Day off",short:"Day off",hex:"#888780",color:"var(--g400)",bg:"var(--g50)",tx:"var(--g600)"},
   {id:"LV",name:"Vacation leave",short:"VL",hex:"#EF9F27",color:"var(--amber)",bg:"var(--amber-bg)",tx:"var(--amber-tx)"},
-  {id:"SL",name:"Sick leave",short:"SL",hex:"#D85A30",color:"var(--coral)",bg:"var(--coral-bg)",tx:"var(--coral-tx)"}
+  {id:"SL",name:"Sick leave",short:"SL",hex:"#D85A30",color:"var(--coral)",bg:"var(--coral-bg)",tx:"var(--coral-tx)"},
+  {id:"WL",name:"Wellness leave",short:"WL",hex:"#D4537E",color:"var(--pink)",bg:"var(--pink-bg)",tx:"var(--pink-tx)"}
 ];
 var ALL=SHIFTS.concat(TAGS);
 var DAYS=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 var MO=["January","February","March","April","May","June","July","August","September","October","November","December"];
-var ORDER=["AM","PM","NT","OFF","LV","SL"];
+var ORDER=["AM","PM","NT","OFF","LV","SL","WL"];
 
 function gi(id){for(var i=0;i<ALL.length;i++){if(ALL[i].id===id)return ALL[i];}return null;}
-function isT(id){return id==="OFF"||id==="LV"||id==="SL";}
+function isT(id){return id==="OFF"||id==="LV"||id==="SL"||id==="WL";}
 function isS(id){return id==="AM"||id==="PM"||id==="NT";}
 function fd(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
 function pd(s){var p=s.split("-");return new Date(+p[0],+p[1]-1,+p[2]);}
@@ -331,7 +336,7 @@ function toggleItem(date,itemId){
 function clearDay(date){
   var dd=gdd(date);var logs=S.logs[date]||[];
   var msg="Are you sure you want to clear this day?";
-  if(logs.length>0)msg+="\n\nThis will remove the schedule and swap notes.\nTime log entries ("+logs.length+" record"+(logs.length>1?"s":"")+") will be kept.";
+  if(logs.length>0)msg+="\n\nThis will remove the schedule and notes.\nTime log entries ("+logs.length+" record"+(logs.length>1?"s":"")+") will be kept.";
   if(!confirm(msg))return;
   delete S.scheds[date];delete S.swapNotes[date];save();closeM();render();
 }
@@ -371,7 +376,7 @@ function renderMainModal(date){
     h+='<span class="mc">'+(on?"&#10003;":"")+'</span></div>';
   }
 
-  h+='<div class="msl">Swap notes</div>';
+  h+='<div class="msl">Notes</div>';
   h+='<textarea class="finp" id="swap-note" placeholder="e.g. Swapped with Nurse Santos, took her March 20 PM shift" onblur="saveSwapNote(\''+date+'\')" style="min-height:60px;resize:vertical">'+esc(swNote)+'</textarea>';
 
   /* TIME LOG SECTION */
@@ -512,7 +517,7 @@ function saveLog(date){
   render();
 }
 
-/* SWAP FORM */
+/* NOTES */
 function esc(s){return String(s).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
 
 function saveSwapNote(date){
@@ -658,7 +663,7 @@ function renderSchedule(){
     var isToday=ds2===today,isSel=ds2===sel,dd=gdd(ds2),hasData=dd.all.length>0;
     var hasLog=!!(S.logs[ds2]&&S.logs[ds2].length>0);
     var tc="";
-    if(dd.tags.indexOf("OFF")>=0)tc=" tOFF";else if(dd.tags.indexOf("LV")>=0)tc=" tLV";else if(dd.tags.indexOf("SL")>=0)tc=" tSL";
+    if(dd.tags.indexOf("OFF")>=0)tc=" tOFF";else if(dd.tags.indexOf("LV")>=0)tc=" tLV";else if(dd.tags.indexOf("SL")>=0)tc=" tSL";else if(dd.tags.indexOf("WL")>=0)tc=" tWL";
     var dotItems=dd.shifts.length>0?dd.shifts:dd.tags;
     var dots="";
     if(dotItems.length>0){dots='<div class="dots">';for(var j=0;j<dotItems.length;j++){var it=gi(dotItems[j]);if(it)dots+='<span class="dt" style="background:'+it.hex+'"></span>';}dots+='</div>';}
@@ -669,17 +674,17 @@ function renderSchedule(){
 
 function renderClock(){
   var now=new Date(),today=fd(now),isIn=!!S.cin,dd=gdd(today),tl=S.logs[today]||[];
-  var isDO=dd.tags.indexOf("OFF")>=0,isLV=dd.tags.indexOf("LV")>=0,isSL=dd.tags.indexOf("SL")>=0;
+  var isDO=dd.tags.indexOf("OFF")>=0,isLV=dd.tags.indexOf("LV")>=0,isSL=dd.tags.indexOf("SL")>=0,isWL=dd.tags.indexOf("WL")>=0;
   var h='<div class="ccard"><div class="ctime" id="lc">'+now.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:true})+'</div>';
   h+='<div class="cdate">'+now.toLocaleDateString([],{weekday:"long",month:"long",day:"numeric",year:"numeric"})+'</div>';
   if(dd.all.length>0){h+='<div class="cscheds">';for(var i=0;i<dd.all.length;i++){var it=gi(dd.all[i]);if(it)h+='<span class="rb" style="background:'+it.bg+";color:"+it.tx+'">'+it.short+'</span>';}h+='</div>';}
-  if(isIn)h+='<div class="cstat s-in">CLOCKED IN</div>';else if(isDO)h+='<div class="cstat s-out">DAY OFF</div>';else if(isLV)h+='<div class="cstat s-lv">VACATION LEAVE</div>';else if(isSL)h+='<div class="cstat s-sl">SICK LEAVE</div>';else h+='<div class="cstat s-out">OFF DUTY</div>';
+  if(isIn)h+='<div class="cstat s-in">CLOCKED IN</div>';else if(isDO)h+='<div class="cstat s-out">DAY OFF</div>';else if(isLV)h+='<div class="cstat s-lv">VACATION LEAVE</div>';else if(isSL)h+='<div class="cstat s-sl">SICK LEAVE</div>';else if(isWL)h+='<div class="cstat s-wl">WELLNESS LEAVE</div>';else h+='<div class="cstat s-out">OFF DUTY</div>';
   h+='<br>';
-  if(isIn)h+='<button class="cbtn cb-out" onclick="clockOut()">Clock out</button>';else if(isDO||isLV||isSL)h+='<button class="cbtn cb-dis" disabled>Clock in</button>';else h+='<button class="cbtn cb-in" onclick="clockIn()">Clock in</button>';
+  if(isIn)h+='<button class="cbtn cb-out" onclick="clockOut()">Clock out</button>';else if(isDO||isLV||isSL||isWL)h+='<button class="cbtn cb-dis" disabled>Clock in</button>';else h+='<button class="cbtn cb-in" onclick="clockIn()">Clock in</button>';
   if(isIn)h+='<div class="csince">Since '+ft(S.cin.lt)+'</div>';
   h+='</div><div class="tlhdr">Today\'s log</div>';
   if(tl.length===0&&!isIn){
-    if(isDO)h+='<div class="dom">Enjoy your day off!</div>';else if(isLV)h+='<div class="dom">You are on vacation leave today.</div>';else if(isSL)h+='<div class="dom">You are on sick leave today. Get well soon!</div>';else h+='<div class="empty">No time entries today.<br>Tap the button above to clock in.</div>';
+    if(isDO)h+='<div class="dom">Enjoy your day off!</div>';else if(isLV)h+='<div class="dom">You are on vacation leave today.</div>';else if(isSL)h+='<div class="dom">You are on sick leave today. Get well soon!</div>';else if(isWL)h+='<div class="dom">You are on wellness leave today. Take care!</div>';else h+='<div class="empty">No time entries today.<br>Tap the button above to clock in.</div>';
   }else{
     for(var i=0;i<tl.length;i++){
       var l=tl[i],s=gi(l.sh),iT=new Date(l.lt),oT=l.lo?new Date(l.lo):null;
@@ -848,7 +853,7 @@ function renderReports(){
   var h='<div class="rpt-month"><button onclick="rptPm()">&#8249;</button><span class="mlbl">'+MO[md.m]+" "+md.y+'</span><button onclick="rptNm()">&#8250;</button></div>';
 
   /* 1. TIME RECORD SUMMARY */
-  var totalShifts=0,daysWorked=0,daysOff=0,daysVL=0,daysSL=0;
+  var totalShifts=0,daysWorked=0,daysOff=0,daysVL=0,daysSL=0,daysWL=0;
   for(var i=0;i<md.days.length;i++){
     var dy=md.days[i];
     totalShifts+=dy.dd.shifts.length;
@@ -856,6 +861,7 @@ function renderReports(){
     if(dy.dd.tags.indexOf("OFF")>=0)daysOff++;
     if(dy.dd.tags.indexOf("LV")>=0)daysVL++;
     if(dy.dd.tags.indexOf("SL")>=0)daysSL++;
+    if(dy.dd.tags.indexOf("WL")>=0)daysWL++;
   }
 
   h+='<div class="rpt-section">';
@@ -867,6 +873,7 @@ function renderReports(){
   h+='<div class="rpt-stat-item"><div class="rpt-stat-label">Off</div><div class="rpt-stat-val">'+daysOff+'</div></div>';
   h+='<div class="rpt-stat-item"><div class="rpt-stat-label">VL</div><div class="rpt-stat-val">'+daysVL+'</div></div>';
   h+='<div class="rpt-stat-item"><div class="rpt-stat-label">SL</div><div class="rpt-stat-val">'+daysSL+'</div></div>';
+  h+='<div class="rpt-stat-item"><div class="rpt-stat-label">WL</div><div class="rpt-stat-val">'+daysWL+'</div></div>';
   h+='</div>';
   h+='<button class="xbtn" onclick="exportTimeRecord()">Export time record (.xlsx)</button>';
   h+='</div>';
@@ -958,19 +965,19 @@ function buildTimeRecordSheet(md){
     var stStr=tp.join(", ");
     var swNote=S.swapNotes[dy.ds]||"";
     if(dy.logs.length===0){
-      rows.push({Date:dy.ds,Day:dn,Schedule:schStr,Login:"",Logout:"",Status:stStr,"Swap Notes":swNote});
+      rows.push({Date:dy.ds,Day:dn,Schedule:schStr,Login:"",Logout:"",Status:stStr,"Notes":swNote});
     }else{
       for(var li=0;li<dy.logs.length;li++){
         var l=dy.logs[li],iT=new Date(l.lt),oT=l.lo?new Date(l.lo):null;
         rows.push({Date:li===0?dy.ds:"",Day:li===0?dn:"",Schedule:li===0?schStr:"",
           Login:iT.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit",hour12:true}),
           Logout:oT?oT.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit",hour12:true}):"(active)",
-          Status:li===0?stStr:"","Swap Notes":li===0?swNote:""});
+          Status:li===0?stStr:"","Notes":li===0?swNote:""});
       }
     }
   }
-  rows.push({Date:"",Day:"",Schedule:"",Login:"",Logout:"",Status:"","Swap Notes":""});
-  rows.push({Date:"TOTAL SHIFTS",Day:"",Schedule:totalShifts,Login:"",Logout:"",Status:"","Swap Notes":""});
+  rows.push({Date:"",Day:"",Schedule:"",Login:"",Logout:"",Status:"","Notes":""});
+  rows.push({Date:"TOTAL SHIFTS",Day:"",Schedule:totalShifts,Login:"",Logout:"",Status:"","Notes":""});
   var ws=XLSX.utils.json_to_sheet(rows);
   ws["!cols"]=[{wch:12},{wch:6},{wch:24},{wch:12},{wch:12},{wch:14},{wch:40}];
   return ws;
@@ -1156,7 +1163,7 @@ function handleImport(input){
 }
 
 function clearAllData(){
-  if(!confirm("This will permanently DELETE all data on this device:\n\n- All schedules\n- All time logs\n- All patient records\n- All charge nurse data\n- All swap notes\n\nThis CANNOT be undone. Are you sure?"))return;
+  if(!confirm("This will permanently DELETE all data on this device:\n\n- All schedules\n- All time logs\n- All patient records\n- All charge nurse data\n- All notes\n\nThis CANNOT be undone. Are you sure?"))return;
   if(!confirm("Are you REALLY sure? Export a backup first if you want to keep your data."))return;
   localStorage.removeItem(K);
   S.scheds={};S.logs={};S.cin=null;S.swapNotes={};S.patients={};S.charge={};
